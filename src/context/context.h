@@ -1,6 +1,7 @@
 #pragma once
 #include "../screens/screen_manager/screen_manager.h"
 #include "../game_state/game_state.h"
+#include "../data_manager/data_manager.h"
 #include <fecs/FECS.h>
 
 class Context {
@@ -20,6 +21,11 @@ public:
 		  return get().mFECS;
 	 }
 
+	 // return json manager
+	 static DataManager& get_data_manager() {
+		  return get().mDataManager;
+	 }
+
 private:
 	 Context() {
 		  mScreenManager = ScreenManager();
@@ -35,4 +41,5 @@ private:
 	 ScreenManager mScreenManager;
 	 GameState mGameState;
 	 fecs::FECS mFECS;
+	 DataManager mDataManager;
 };
