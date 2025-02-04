@@ -8,11 +8,7 @@ namespace Screens {
 	 public:
 		  MainMenu();
 
-		  virtual void render();
-		  virtual void update();
-
 	 private:
-		  std::vector<std::string> mOptions;
 		  int mSelection = 0;
 	 };
 }

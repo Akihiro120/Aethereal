@@ -1,20 +1,19 @@
 #pragma once
-#include <raylib.h>
-#include <string>
+#include <ftxui/component/component.hpp>
 
 class Screen {
 public:
 	 Screen() = default;
 
 	 // screen oeprations
-	 virtual void render();
-	 virtual void update();
+	 ftxui::Component get_container(); 
+	 ftxui::Component get_interface(); 
 
 protected:
 
 	 // operation helpers
-	 void menu_selection_clamped(int* selection, int max);
-	 void menu_navigation_2d(Vector2* dimensions, Vector2 max);
-	 void get_keyboard_input(std::string* text);
+	 ftxui::Component mContainer;
+	 ftxui::Component mInterface;
 
+	 std::vector<ftxui::Component> mComponents;
 };

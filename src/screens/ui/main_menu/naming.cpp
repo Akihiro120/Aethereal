@@ -7,34 +7,23 @@
 
 namespace Screens {
 
-	 void MainMenu_Naming::render() {
-		  auto& rf = Context::get_render_framework();
-		  rf.draw_text("Enter your Name");
-		  rf.draw_line(15, false);
-		  rf.draw_text(mName);
+	 MainMenu_Naming::MainMenu_Naming() {
+		  mComponents.push_back(ftxui::Input(ftxui::InputOption{
+				.content = &mName,
+				.multiline = false,
+				.on_enter = [&] {
 
-		  // reset
-		  rf.clear();
-	 }
+				}
+		  })); 
 
-	 void MainMenu_Naming::update() {
-		  
-		  // get keyboard input
-		  get_keyboard_input(&mName);
-
-		  if (IsKeyPressed(KEY_ENTER) && !mName.empty()) {
-
-				// create name
-				auto& ecs = Context::get_fecs();
-				ecs.query_system<PlayerComponent>([&](fecs::EntityID id, PlayerComponent& player) {
-					 
-					 // attach
-					 ecs.add(id, NameComponent(mName));
-					 ecs.add(id, LevelComponent());
+		  mContainer = ftxui::Container::Vertical({mComponents[0]});
+		  mInterface = ftxui::Renderer([&]{
+				return ftxui::vbox({
+					 ftxui::text("Name your Character") | ftxui::bold,
+					 ftxui::separatorHeavy(),
+					 mComponents[0]->Render()
 				});
-				
-				Context::get_screen_manager().pop();
-				Context::get_screen_manager().push(std::make_shared<Screens::World>());
-		  }
+		  });
+
 	 }
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include "../screens/screen_manager/screen_manager.h"
-#include "../render_framework/render_framework.h"
 #include "../game_state/game_state.h"
 #include <fecs/FECS.h>
 
@@ -11,11 +10,6 @@ public:
 		  return get().mScreenManager;
 	 }
 
-	 // return render framework
-	 static FWRender::RenderFramework& get_render_framework() {
-		  return get().mRenderFramework;
-	 }
-	 
 	 // return game state
 	 static GameState& get_game_state() {
 		  return get().mGameState;
@@ -29,7 +23,6 @@ public:
 private:
 	 Context() {
 		  mScreenManager = ScreenManager();
-		  mRenderFramework = FWRender::RenderFramework();
 		  mGameState = GameState();
 		  mFECS = fecs::FECS();
 	 }
@@ -41,6 +34,5 @@ private:
 
 	 ScreenManager mScreenManager;
 	 GameState mGameState;
-	 FWRender::RenderFramework mRenderFramework;
 	 fecs::FECS mFECS;
 };
