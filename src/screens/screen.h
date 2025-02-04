@@ -14,6 +14,7 @@ protected:
 
 	 // operation helpers
 	 void menu_selection_clamped(int* selection, int max);
+	 void menu_navigation_2d(Vector2* dimensions, Vector2 max);
 	 void get_keyboard_input(std::string* text);
 
 };

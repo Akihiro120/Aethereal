@@ -14,6 +14,9 @@ public:
 	 // screen manipulation
 	 void push(std::shared_ptr<Screen> screen);
 	 void pop();
+	 void push_previous_screen();
+
+	 std::shared_ptr<Screen> get_previous_screen();
 
 	 // screen operations
 	 void update();
@@ -24,4 +27,5 @@ public:
 private:
 	 // container to hold all current screens
 	 std::vector<std::shared_ptr<Screen>> mScreens;
+	 std::shared_ptr<Screen> mPreviousScreen;
 };
