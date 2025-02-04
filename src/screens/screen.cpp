@@ -53,3 +53,7 @@ void Screen::get_keyboard_input(std::string* text) {
 		text->erase(text->length() - 1);
 	}
 }
+
+void Screen::menu_navigation_2d(Vector2* dimensions, Vector2 max) {
+
+}

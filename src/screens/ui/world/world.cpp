@@ -1,5 +1,8 @@
 #include "world.h"
 #include "../../../context/context.h"
+#include "../main_menu/menu.h"
+#include "../shop/shop.h"
+#include "../inventory/inventory.h"
 #include "../../../ecs/components/player_component.h"
 #include "../../../ecs/components/name_component.h"
 #include "../../../ecs/components/level_component.h"
@@ -39,5 +42,36 @@ namespace Screens {
 
 	 void World::update() {
 		  menu_selection_clamped(&mSelection, mOptions.size() - 1);
+
+		  if (IsKeyPressed(KEY_ENTER)) {
+				
+				switch (mSelection) {
+					 
+					 case 0: {
+						  
+						  break;
+					 }
+					 case 1: {
+						  // goto shop
+						  Context::get_screen_manager().pop();
+						  Context::get_screen_manager().push(std::make_shared<Shop>());
+						  
+						  break;
+					 }
+					 case 2: {
+						  Context::get_screen_manager().pop();
+						  Context::get_screen_manager().push(std::make_shared<Inventory>());
+						  
+						  break;
+					 }
+					 // exit the game
+					 case 3: {
+						  Context::get_screen_manager().pop();
+						  Context::get_screen_manager().push(std::make_shared<MainMenu>());
+						  
+						  break;
+					 }
+				}
+		  }
 	 }
 }

@@ -35,6 +35,9 @@ namespace FWRender {
 		  
 		  // start
 		  std::string line = "+";
+		  if (vertical) {
+				line += "\n";
+		  }
 
 		  // line
 		  for (int i = 0; i < size - 2; i++) {
@@ -59,4 +62,6 @@ namespace FWRender {
 	 void RenderFramework::new_line() {
 		  mOffset++;
 	 }
+
 }
+
