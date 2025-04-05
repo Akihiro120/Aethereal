@@ -1,9 +1,16 @@
 #include "main_menu.h"
 #include <glm/glm.hpp>
+#include "../../data/enums/unicodes.h"
+#include "../../services/service_locator.h"
+#include "../../input/input_manager.h"
+#include "../../game/state/game_state.h"
 
 void MainMenu::render() {
 	terminal_color("white");
 	terminal_print(0, 0, "Aethereal");
+	for (int i = 0; i < 15; i++) {
+		terminal_put(i, 1, (int)Unicode::BoxHeavy::HORIZONTAL);
+	}
 
 	// Draw the menu options
 	for (int i = 0; i < m_options.size(); ++i) {
@@ -11,7 +18,7 @@ void MainMenu::render() {
 		if (i == m_selected_option) {
 			terminal_color("yellow");
 		}
-		terminal_print(0, 1 + i, m_options[i].c_str());
+		terminal_print(0, 2 + i, m_options[i].c_str());
 	}
 
 	terminal_color("grey");
@@ -22,12 +29,22 @@ void MainMenu::update() {
 	
 	auto input_mag = ServiceLocator::get_service<InputManager>();
 	input_mag->process_input([this](int key) {
-		if (key == TK_UP) {
+		if (key == TK_UP || key == TK_K) {
 			m_selected_option = glm::clamp(m_selected_option - 1, 0, (int)m_options.size() - 1);
 		}
 
-		if (key == TK_DOWN) {
+		if (key == TK_DOWN || key == TK_J) {
 			m_selected_option = glm::clamp(m_selected_option + 1, 0, (int)m_options.size() - 1);
+		}
+
+		if (key == TK_ENTER) {
+			auto game_state = ServiceLocator::get_service<GameState>();
+			if (m_selected_option == 0) {
+			}
+			else if (m_selected_option == 1) {
+				// Exit game
+				game_state->close_game();
+			}
 		}
 	});
 }
