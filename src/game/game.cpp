@@ -18,6 +18,7 @@ Game::Game() {
 	ServiceLocator::provide(std::make_shared<FECS>());
 	ServiceLocator::provide(std::make_shared<ScreenManager>());
 
+	// add main menu starting screen
 	ServiceLocator::get_service<ScreenManager>()->push(std::make_shared<MainMenu>());
 }
 
