@@ -24,6 +24,7 @@ int main() {
 #ifdef _WIN32
 	// Set up exception handling
 	SetUnhandledExceptionFilter(ExceptionHandler);
+	SetProcessDPIAware();
 #endif
 
 	// begin
