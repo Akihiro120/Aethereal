@@ -1,23 +1,21 @@
 #pragma once
 #include <BearLibTerminal.h>
 #include "../screen.h"
+#include "../../services/service_locator.h"
+#include "../../input/input_manager.h"
+#include <array>
 
 class MainMenu : public Screen {
 public:
 	MainMenu() = default;
 
-	void render() override {
-		terminal_color("white");
-		terminal_print(0, 0, "Aethereal");
-		terminal_print(0, 1, "Start Game"); 
-
-		terminal_color("grey");
-		terminal_print(1, terminal_state(TK_HEIGHT) - 1, "Press ESC to exit");
-	}
-
-	void update() override {
-	
-	}
+	void render() override;
+	void update() override;
 
 private:
+	int m_selected_option = 0;
+	std::array<std::string, 2> m_options = {
+		"Start Game",
+		"Exit"
+	};
 };
