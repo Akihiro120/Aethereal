@@ -1,4 +1,5 @@
 .cache/
 build/
 run
+run.bat
 */.DS_Store

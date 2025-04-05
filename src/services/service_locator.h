@@ -6,6 +6,13 @@
 
 class ServiceLocator {
 public:
+	// Delete copy and move constructors and assignment operators
+	ServiceLocator(const ServiceLocator&) = delete;
+	ServiceLocator(ServiceLocator&&) = delete;
+	ServiceLocator& operator=(const ServiceLocator&) = delete;
+	ServiceLocator& operator=(ServiceLocator&&) = delete;
+
+	// provide service
 	template <typename T>
 	static void provide(std::shared_ptr<T> service) {
 		const std::type_index type_index = std::type_index(typeid(T));	
@@ -20,8 +27,9 @@ public:
 		return;
 	}
 
+	// get service
 	template <typename T>
-	static T& get_service() {
+	static std::shared_ptr<T> get_service() {
 		const std::type_index type_index = std::type_index(typeid(T));
 
 		auto it = get().m_services.find(type_index);
@@ -29,7 +37,11 @@ public:
 			throw std::runtime_error("Service not provided");
 		}
 
-		return *std::static_pointer_cast<T>(it->second);
+		auto service = std::static_pointer_cast<T>(it->second);
+		if (!service) {
+			throw std::runtime_error("Service type mismatch");
+		}
+		return service;
 	}
 
 private:
@@ -40,5 +52,6 @@ private:
 
 	ServiceLocator() = default;
 
+	// service
 	std::unordered_map<std::type_index, std::shared_ptr<void>> m_services;
 };
