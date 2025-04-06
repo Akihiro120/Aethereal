@@ -1,12 +1,12 @@
 #include "src/game/game.h"
-#include <windows.h>
-#include <csignal>
 #include <iostream>
 
 #ifdef __arm64__
+#include <csignal>
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 #ifdef _WIN64
+#include <windows.h>
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* pExceptionInfo) {
 	// Handle the exception here
 	std::cerr << "Unhandled exception occurred! 0x" << pExceptionInfo->ExceptionRecord->ExceptionCode << std::endl;
