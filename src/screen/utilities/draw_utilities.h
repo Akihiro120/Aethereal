@@ -9,6 +9,8 @@ namespace DrawUtils {
 
 		// Constructor
 		Box(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
+		Box(int x, int y, int width, int height) : x((float)x), y((float)y), width((float)width), height((float)height) {}
+		Box() : x(0), y(0), width(0), height(0) {}
 	};
 
 	// draw a rectangle
