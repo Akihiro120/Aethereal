@@ -10,7 +10,7 @@ Game::Game() {
 
 	// Initialize terminal
 	terminal_open();
-	terminal_set("window: size=160x50, title='Aethereal', resizable=true; font: ../resources/fonts/fixedsys62.ttf, size=24, hinting=normal;");
+	terminal_set("window: size=160x50, title='Aethereal', resizable=true; font: ../resources/fonts/fixedsys62.ttf, size=18, hinting=normal;");
 
 	// initialize
 	ServiceLocator::provide(std::make_shared<InputManager>());
