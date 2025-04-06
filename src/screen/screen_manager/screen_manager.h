@@ -10,6 +10,7 @@ public:
 	// screen management
 	void push(std::shared_ptr<Screen> screen); 
 	void pop();
+	void transition(std::shared_ptr<Screen> screen);
 	/*Screen get_current_screen();*/
 
 	// screen operations

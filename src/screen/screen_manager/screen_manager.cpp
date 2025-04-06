@@ -22,3 +22,8 @@ void ScreenManager::render() {
 	}
 }
 
+void ScreenManager::transition(std::shared_ptr<Screen> screen) {
+	m_screens.clear();
+	m_screens.push_back(screen);
+}
+
