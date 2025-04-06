@@ -4,6 +4,8 @@
 #include "../../services/service_locator.h"
 #include "../../input/input_manager.h"
 #include "../../game/state/game_state.h"
+#include "../../screen/screen_manager/screen_manager.h"
+#include "../world/world.h"
 
 void MainMenu::render() {
 	terminal_color("white");
@@ -40,6 +42,9 @@ void MainMenu::update() {
 		if (key == TK_ENTER) {
 			auto game_state = ServiceLocator::get_service<GameState>();
 			if (m_selected_option == 0) {
+				auto scr_manager = ServiceLocator::get_service<ScreenManager>();
+				scr_manager->pop();
+				scr_manager->push(std::make_shared<World>());
 			}
 			else if (m_selected_option == 1) {
 				// Exit game
