@@ -5,10 +5,10 @@
 namespace DrawUtils {
 
 	struct Box {
-		int x, y, width, height;
+		float x, y, width, height;
 
 		// Constructor
-		Box(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {}
+		Box(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
 	};
 
 	// draw a rectangle
@@ -16,7 +16,7 @@ namespace DrawUtils {
 		// horizontal lines
 		for (int x = 0; x < box.width; x++) {
 			terminal_put(x + box.x, 0 + box.y, (int)Unicode::BoxLight::HORIZONTAL);
-			terminal_put(x + box.y, box.height + box.y, (int)Unicode::BoxLight::HORIZONTAL);
+			terminal_put(x + box.x, box.height + box.y, (int)Unicode::BoxLight::HORIZONTAL);
 		}
 
 		// vertical lines
@@ -26,10 +26,10 @@ namespace DrawUtils {
 		}
 
 		// corners
-		terminal_put(0, 0, (int)Unicode::BoxLight::TOP_LEFT);
-		terminal_put(box.width, 0, (int)Unicode::BoxLight::TOP_RIGHT);
-		terminal_put(0, box.height, (int)Unicode::BoxLight::BOTTOM_LEFT);
-		terminal_put(box.width, box.height, (int)Unicode::BoxLight::BOTTOM_RIGHT);
+		terminal_put(box.x, box.y, (int)Unicode::BoxLight::TOP_LEFT);
+		terminal_put(box.width + box.x, box.y, (int)Unicode::BoxLight::TOP_RIGHT);
+		terminal_put(box.x, box.height + box.y, (int)Unicode::BoxLight::BOTTOM_LEFT);
+		terminal_put(box.width + box.x, box.height + box.y, (int)Unicode::BoxLight::BOTTOM_RIGHT);
 	}	
 	
 	// draw a rectangle
@@ -37,7 +37,7 @@ namespace DrawUtils {
 		// horizontal lines
 		for (int x = 0; x < box.width; x++) {
 			terminal_put(x + box.x, 0 + box.y, (int)Unicode::BoxHeavy::HORIZONTAL);
-			terminal_put(x + box.y, box.height + box.y, (int)Unicode::BoxHeavy::HORIZONTAL);
+			terminal_put(x + box.x, box.height + box.y, (int)Unicode::BoxHeavy::HORIZONTAL);
 		}
 
 		// vertical lines
@@ -47,9 +47,9 @@ namespace DrawUtils {
 		}
 
 		// corners
-		terminal_put(0, 0, (int)Unicode::BoxHeavy::TOP_LEFT);
-		terminal_put(box.width, 0, (int)Unicode::BoxHeavy::TOP_RIGHT);
-		terminal_put(0, box.height, (int)Unicode::BoxHeavy::BOTTOM_LEFT);
-		terminal_put(box.width, box.height, (int)Unicode::BoxHeavy::BOTTOM_RIGHT);
+		terminal_put(box.x, box.y, (int)Unicode::BoxHeavy::TOP_LEFT);
+		terminal_put(box.width + box.x, box.y, (int)Unicode::BoxHeavy::TOP_RIGHT);
+		terminal_put(box.x, box.height + box.y, (int)Unicode::BoxHeavy::BOTTOM_LEFT);
+		terminal_put(box.width + box.x, box.height + box.y, (int)Unicode::BoxHeavy::BOTTOM_RIGHT);
 	}
 }
