@@ -1,6 +1,10 @@
 #include "src/game/game.h"
 #include <iostream>
 
+// define defaults
+#define MAX_SPARSE_SIZE 2000
+#define MAX_COMPONENTS 100
+
 #ifdef __arm64__
 #include <csignal>
 #include <ApplicationServices/ApplicationServices.h>
