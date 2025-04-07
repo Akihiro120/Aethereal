@@ -6,9 +6,9 @@
 #include "systems/player_systems.h"
 #include "systems/physics_system.h"
 
-class World : public Screen {
+class WorldScreen : public Screen {
 public:
-	World();
+	WorldScreen();
 
 	void render() override;
 	void update() override;

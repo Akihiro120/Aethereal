@@ -2,11 +2,11 @@
 #include "../utilities/draw_utilities.h"
 #include "../../input/input_manager.h"
 
-World::World() {
+WorldScreen::WorldScreen() {
 	init();
 }
 
-void World::render() {
+void WorldScreen::render() {
 
 	// screen dimensions
 	int screen_width = terminal_state(TK_WIDTH)-1;
@@ -18,17 +18,17 @@ void World::render() {
 	m_message_panel.render(DrawUtils::Box(screen_width*0.75f, screen_height*0.75f, screen_width*0.25f, screen_height*0.25f));
 }
 
-void World::init() {
+void WorldScreen::init() {
 	// initialize player
 	auto ecs = ServiceLocator::get_service<FECS>();
 	Entity player = ecs->create_entity();	
 	ecs->attach<Position>(player, Position(0.0f, 0.0f));
 	ecs->attach<Velocity>(player, Velocity(0.0f, 0.0f));
-	ecs->attach<Render>(player, Render{(int)'@', 0xFF00FF00});
+	ecs->attach<Render>(player, Render{(int)'@', 0xFF});
 	ecs->attach<Player>(player, Player{});
 }
 
-void World::update() {
+void WorldScreen::update() {
 
 	auto input = ServiceLocator::get_service<InputManager>();
 	input->process_input([this](int key) {
