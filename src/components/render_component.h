@@ -1,7 +1,7 @@
 #pragma once
-#include <BearLibTerminal.h>
+#include <raylib/raylib.h>
 
 struct Render {
 	int code = 0x00;
-	color_t color = 0xFF;
+	Color color = WHITE;
 };

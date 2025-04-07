@@ -1,5 +1,4 @@
 #pragma once
-#include <BearLibTerminal.h>
 #include "../../data/enums/unicodes.h"
 
 namespace DrawUtils {
