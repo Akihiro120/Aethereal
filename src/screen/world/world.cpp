@@ -1,6 +1,8 @@
 #include "world.h"
 #include "../utilities/draw_utilities.h"
 #include "../../input/input_manager.h"
+#include "../../components/camera_component.h"
+#include "BearLibTerminal.h"
 
 WorldScreen::WorldScreen() {
 	init();
@@ -24,8 +26,12 @@ void WorldScreen::init() {
 	Entity player = ecs->create_entity();	
 	ecs->attach<Position>(player, Position(0.0f, 0.0f));
 	ecs->attach<Velocity>(player, Velocity(0.0f, 0.0f));
-	ecs->attach<Render>(player, Render{(int)'@', 0xFF});
+	ecs->attach<Render>(player, Render{(int)'@', color_from_name("green")});
 	ecs->attach<Player>(player, Player{});
+
+	// initialize camera
+	Entity camera = ecs->create_entity();
+	ecs->attach<Camera>(camera, Camera{0.0f, 0.0f});
 }
 
 void WorldScreen::update() {
@@ -37,4 +43,5 @@ void WorldScreen::update() {
 		m_player_system.movement(key);
 	});
 	m_physics_system.resolve_velocities();
+	m_game_panel.update();
 }

@@ -20,4 +20,5 @@ void GamePanel::render(const DrawUtils::Box& box) {
 void GamePanel::update() {
 	// update game panel
 	m_world_system.update();
+	m_camera_system.update();
 }
