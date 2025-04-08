@@ -5,6 +5,7 @@
 #include "../../../components/position_component.h"
 #include "../../../components/camera_component.h"
 #include "../../utilities/draw_utilities.h"
+#include "BearLibTerminal.h"
 
 class RenderSystem {
 public:
@@ -36,6 +37,7 @@ public:
 				}
 
 				// render
+				terminal_bkcolor(render.bg_color);
 				terminal_color(render.color);
 				terminal_put(screen_x + screen_pos_x, screen_y + screen_pos_y, render.code);
 		});
