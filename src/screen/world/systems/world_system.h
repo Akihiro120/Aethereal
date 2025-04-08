@@ -27,39 +27,33 @@ public:
 
 	}
 
-	void get_bounds(std::function<void(glm::ivec2 chunk_pos, glm::ivec2 idx)> callback, glm::ivec2 chunk_size) {
+	void get_bounds(std::function<void(glm::ivec2 chunk_pos, glm::ivec2 offset_idx)> callback) {
 		// generate world
 		auto ecs = ServiceLocator::get_service<FECS>();
+		auto world = ecs->get<World>(m_world);
+		glm::ivec2 chunk_size = world->chunk_size;
 
-		float p_pos_x, p_pos_y;
-		ecs->query<Player, Position>([
-				&p_pos_x, &p_pos_y
-		](Entity _, Player&, Position& pos) {
-			p_pos_x = pos.x;
-			p_pos_y = pos.y;
+		glm::vec2 player_pos;
+		ecs->query<Player, Position>([&](Entity _, Player&, Position& pos) {
+			player_pos = glm::vec2(pos.x, pos.y);
 		});
 
-		glm::vec2 player_chunk = {
-			(float)floor(p_pos_x / chunk_size.x),
-			(float)floor(p_pos_y / chunk_size.y)
+		glm::ivec2 player_chunk = {
+			(int)glm::floor(player_pos.x / (float)chunk_size.x),
+			(int)glm::floor(player_pos.y / (float)chunk_size.y)
 		};
 
 		// render distance
 		const int rdx = 8;
 		const int rdy = glm::floor(rdx * 0.5);
-		
-		// calculate bounds
-		const int start_x = player_chunk.x - rdx;
-		const int start_y = player_chunk.y - rdy;
-		const int end_x = player_chunk.x + rdx;
-		const int end_y = player_chunk.y + rdy;
 
 		// get bounds
-		for (int dy = start_y; dy <= end_y; dy++) {
-			for (int dx = start_x; dx <= end_x; dx++) {
-				glm::ivec2 chunk_pos = player_chunk + glm::vec2{dx, dy};
+		for (int dy = -rdy; dy <= rdy; dy++) {
+			for (int dx = -rdx; dx <= rdx; dx++) {
+				glm::ivec2 offset = {dx, dy};
+				glm::ivec2 chunk_pos = player_chunk + offset; 
 
-				callback(chunk_pos, glm::ivec2{dx, dy});
+				callback(chunk_pos, offset);
 			}
 		}
 	}
@@ -74,9 +68,9 @@ public:
 		get_bounds([&](auto chunk_pos, auto idx) {
 
 			if (world->chunks.find(chunk_pos) == world->chunks.end()) {
-				world->chunks[chunk_pos] = generate_chunk(world->chunk_size);
+				world->chunks[chunk_pos] = generate_chunk(chunk_size, chunk_pos);
 			}	
-		}, chunk_size);
+		});
 	}
 
 	void render(const DrawUtils::Box& box) {
@@ -87,28 +81,43 @@ public:
 
 		get_bounds([&](auto chunk_pos, auto idx) {
 
-			if (world->chunks.find(chunk_pos) != world->chunks.end()) {
-				auto tiles = world->chunks[chunk_pos].tiles;
-				render_chunk(tiles, {idx.x * chunk_size.x, idx.y * chunk_size.y}, chunk_size, box);
+			auto it = world->chunks.find(chunk_pos);
+			if (it != world->chunks.end()) {
+				const auto& tiles = world->chunks[chunk_pos].tiles;
+				const glm::vec2 offset = chunk_pos * chunk_size;
+				render_chunk(tiles, offset, chunk_size, box);
 			}	
-		}, chunk_size);
+		});
 	}
 
 private:
-	Chunk generate_chunk(glm::ivec2 chunk_size) {
+	Chunk generate_chunk(glm::ivec2 chunk_size, glm::ivec2 chunk_pos) {
 		Chunk chunk = {};
 		chunk.tiles.resize(chunk_size.x * chunk_size.y);
 
 		for (int y = 0; y < chunk_size.y; y++) {
 			for (int x = 0; x < chunk_size.x; x++) {
+				const int world_x = x + chunk_pos.x * chunk_size.x;
+				const int world_y = y + chunk_pos.y * chunk_size.y;
+
+				const color_t color = color_from_argb(
+						255, 
+						(world_x * 8) % 255,
+						(world_y * 8) % 255,
+						(world_x + world_y) % 255
+				);
+
+				float height = m_noise.GetNoise((float)world_x, (float)world_y * 2.0f);
 				
-				chunk.tiles[x + chunk_size.x * y] = Tile {
-					.render = Render {
-						.code = (int)'#', 
-						.color = color_from_argb(255, (x * 8) % 255, (y * 8) % 255, (x * 40 + y * 20) % 255),
-					},
-					.collidable = true,
-				};
+				if (height < 0.0f) {
+					chunk.tiles[x + chunk_size.x * y] = Tile {
+						.render = Render {
+							.code = (int)'#', 
+							.color = color_from_argb(255, (world_x * 8) % 255, (world_y * 8) % 255, 0 % 255),
+						},
+						.collidable = true,
+					};
+				}
 			}
 		}
 
