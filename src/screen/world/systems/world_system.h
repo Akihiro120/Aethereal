@@ -110,10 +110,17 @@ private:
 				float height = m_noise.GetNoise((float)world_x, (float)world_y * 2.0f);
 				
 				if (height < 0.0f) {
+					int height_greyscale = (int)(height * 255.0f);
 					chunk.tiles[x + chunk_size.x * y] = Tile {
 						.render = Render {
 							.code = (int)'#', 
-							.color = color_from_argb(255, (world_x * 8) % 255, (world_y * 8) % 255, 0 % 255),
+							.color = color_from_argb(255, 
+								(world_x * 8) % 255,
+								(world_y * 8) % 255,
+								height_greyscale	
+							),
+							.bg_color = color_from_argb(255, 
+								height_greyscale, height_greyscale, height_greyscale),
 						},
 						.collidable = true,
 					};
@@ -148,6 +155,7 @@ private:
 				}
 
 				int index = x + chunk_size.x * y;
+				terminal_bkcolor(tiles[index].render.bg_color);
 				terminal_color(tiles[index].render.color);
 				terminal_put(pos_x, pos_y, tiles[index].render.code);
 			}
