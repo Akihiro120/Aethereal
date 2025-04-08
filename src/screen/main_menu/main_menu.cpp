@@ -5,7 +5,7 @@
 #include "../../input/input_manager.h"
 #include "../../game/state/game_state.h"
 #include "../../screen/screen_manager/screen_manager.h"
-#include "../world/world.h"
+#include "name.h"
 
 void MainMenu::render() {
 	terminal_color("white");
@@ -44,7 +44,7 @@ void MainMenu::update() {
 			if (m_selected_option == 0) {
 				auto scr_manager = ServiceLocator::get_service<ScreenManager>();
 				scr_manager->pop();
-				scr_manager->push(std::make_shared<WorldScreen>());
+				scr_manager->push(std::make_shared<NameScreen>());
 			}
 			else if (m_selected_option == 1) {
 				// Exit game
