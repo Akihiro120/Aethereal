@@ -1,6 +1,7 @@
 #pragma once
 #include "../../data/enums/unicodes.h"
 #include <BearLibTerminal.h>
+#include <vector>
 
 namespace DrawUtils {
 
@@ -53,5 +54,16 @@ namespace DrawUtils {
 		terminal_put(box.width + box.x, box.y, (int)Unicode::BoxHeavy::TOP_RIGHT);
 		terminal_put(box.x, box.height + box.y, (int)Unicode::BoxHeavy::BOTTOM_LEFT);
 		terminal_put(box.width + box.x, box.height + box.y, (int)Unicode::BoxHeavy::BOTTOM_RIGHT);
+	}
+
+	// draw wrapped text
+	inline std::vector<std::string> wrap_text(int wrap_size) {
+		std::vector<std::string> wrapped_text;
+
+		return wrapped_text;
+	}
+
+	inline void draw_text_array(int start_x, int start_y, const std::vector<std::string>& text) {
+
 	}
 }
