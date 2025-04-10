@@ -2,19 +2,23 @@
 	"talents": [
 		{
 			"name": "Talentless",
-			"description": "You have no special talents."
+			"description": "You are a blank slate, a remarkable soul in a world brimming with extraordinary abilities. While others are born with gifts, you are forged in the fires of adversity. Your lack of talent is not a weakness-it is your greatest strength. You are free from the chains of expectation, and in your ordinariness lies infinite potential. The world may dismiss you, but you will prove that even the talentless can rise to greatness.",
+			"flavor": "They called you talentless, but they forgot one thing: the greatest stories are not about those born with power, but those who seize it."
 		},
 		{
 			"name": "Swordsman",
-			"desciption": "You are a master swordsman, able to wield any sword with ease"
+			"description": "The blade sings in your hands, a symphony of steel and fury. You are the storm that is approaching, a whirlwind of precision and power. Every swing of your sword tells a story-of battles won, of honor upheld, of lives defended. You are not just a warrior; you are a legend in the making. The weight of your weapon is nothing compared to the weight of your resolve.",
+			"flavor": "When the sword is drawn, the world holds its breath. You are the edge between victory and defeat, every swing carries the hopes of those who cannot fight, and every strike is a promise to protect what matters most."
 		},
 		{
 			"name": "Marksman",
-			"description": "You are a master marksman, able to hit any target with ease"
+			"description": "You are the shadows in the trees, the whisper of death on the wind. Your prowess pierces your enemies before they even know you're there. Every shot is a note in a deadly melody. You are the unseen guardian, the silent sentinel, and when you strike, it is with the precision of a predator.",
+			"flavor": "The arrow does not choose its target-it is the archer's will that guides it, and your will is unbreakable. The first shot you make will carry the weight of the world"
 		},
 		{
 			"name": "Magician",
-			"description": "You are a master magician, able to cast any spell with ease"
+			"description": "You are the weaver of wonders, a master of the arcane. The elements bow to your command, and the fabric of reality bends to your will. Fire dances at your fingertips, ice crystrallizes in your breaths, and lightning crackles in your veins. You are a unit of absolute intellegence calculating every spell in a split second. You will become a force of nature. But beware, for the power you wield is as dangerous as it is beautiful.",
+			"flavor": "Magic is not a gift, but a pact. You dance with fire, forces beyond mortal comprehension. Even though every spell you cast is an offering to the void, you wield it anyway, because the world needs light, even if it costs you everything"
 		}
 	]
 }
