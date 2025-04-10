@@ -1,4 +1,5 @@
 #include "src/game/game.h"
+#include "src/logging.h"
 #include <iostream>
 
 // define defaults
@@ -13,7 +14,8 @@
 #include <windows.h>
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* pExceptionInfo) {
 	// Handle the exception here
-	std::cerr << "Unhandled exception occurred! 0x" << pExceptionInfo->ExceptionRecord->ExceptionCode << std::endl;
+	// std::cerr << "Unhandled exception occurred! 0x" << pExceptionInfo->ExceptionRecord->ExceptionCode << std::endl;
+	AETHEREAL_LOG("Unhandled exception occurred! 0x" << pExceptionInfo->ExceptionRecord->ExceptionCode);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 #endif
