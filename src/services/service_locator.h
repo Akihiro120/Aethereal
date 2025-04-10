@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include <memory>
-#include <iostream>
+#include "../logging.h"
 
 class ServiceLocator {
 public:
@@ -19,7 +19,7 @@ public:
 
 		auto it = get().m_services.find(type_index);
 		if (it != get().m_services.end()) {
-			std::cout << "Service already provided for this type." << std::endl;
+			AETHEREAL_LOG("Service already provided for this type.");
 			return;
 		}
 
@@ -33,14 +33,10 @@ public:
 		const std::type_index type_index = std::type_index(typeid(T));
 
 		auto it = get().m_services.find(type_index);
-		if (it == get().m_services.end()) {
-			throw std::runtime_error("Service not provided");
-		}
+		AETHEREAL_ASSERT(it != get().m_services.end(), "Service not provided");
 
 		auto service = std::static_pointer_cast<T>(it->second);
-		if (!service) {
-			throw std::runtime_error("Service type mismatch");
-		}
+		AETHEREAL_ASSERT(service, "Service type mismatch");
 		return service;
 	}
 
