@@ -1,0 +1,20 @@
+{
+	"talents": [
+		{
+			"name": "Talentless",
+			"description": "You have no special talents."
+		},
+		{
+			"name": "Swordsman",
+			"desciption": "You are a master swordsman, able to wield any sword with ease"
+		},
+		{
+			"name": "Marksman",
+			"description": "You are a master marksman, able to hit any target with ease"
+		},
+		{
+			"name": "Magician",
+			"description": "You are a master magician, able to cast any spell with ease"
+		}
+	]
+}
