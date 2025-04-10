@@ -57,13 +57,22 @@ namespace DrawUtils {
 	}
 
 	// draw wrapped text
-	inline std::vector<std::string> wrap_text(int wrap_size) {
-		std::vector<std::string> wrapped_text;
+	inline std::vector<std::string> wrap_text(const std::string& s, int wrap_size) {
+		std::istringstream iss(s);
+    	std::string word, line;
+    	std::vector<std::string> lines;
 
-		return wrapped_text;
-	}
+    	while (iss >> word) {
+        	if (line.size() + word.size() + (line.empty() ? 0 : 1) > wrap_size) {
+            lines.push_back(line);
+            line.clear();
+        	}
+        	if (!line.empty()) line += ' ';
+        	line += word;
+    	}
+    	if (!line.empty()) lines.push_back(line);
+    	return lines;
 
-	inline void draw_text_array(int start_x, int start_y, const std::vector<std::string>& text) {
-
+		return lines;
 	}
 }
