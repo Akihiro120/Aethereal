@@ -17,7 +17,11 @@ void InputManager::process_input(std::function<void(int)> fn) {
 void InputManager::process_keyboard_input(std::string* s) {
 	for (auto key : m_keys) {
 		if (key >= TK_A && key <= TK_Z) {
-				*s += 'a' + (key - TK_A);
+			char c = 'a' + (key - TK_A);
+			if (terminal_state(TK_SHIFT)) {
+				c = c - ('a' - 'A');
+			}
+			*s += c;
 		}
 		if (key >= TK_1 && key <= TK_9) {
 			*s += '1' + (key - TK_1);
