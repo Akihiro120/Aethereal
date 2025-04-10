@@ -5,6 +5,7 @@
 #include "state/game_state.h"
 #include "../screen/screen_manager/screen_manager.h"
 #include "../screen/main_menu/main_menu.h"
+#include "../data/database/database.h"
 
 Game::Game() {
 
@@ -17,6 +18,9 @@ Game::Game() {
 	ServiceLocator::provide(std::make_shared<GameState>());
 	ServiceLocator::provide(std::make_shared<FECS>());
 	ServiceLocator::provide(std::make_shared<ScreenManager>());
+	ServiceLocator::provide(std::make_shared<Database>());
+
+	ServiceLocator::get_service<Database>()->load_directory("../resources/data/");
 
 	// add main menu starting screen
 	ServiceLocator::get_service<ScreenManager>()->push(std::make_shared<MainMenu>());
