@@ -2,6 +2,7 @@
 #include "../utilities/draw_utilities.h"
 #include "../../input/input_manager.h"
 #include "../../components/camera_component.h"
+#include "../../components/player_component.h"
 #include "BearLibTerminal.h"
 
 WorldScreen::WorldScreen() {
@@ -23,15 +24,15 @@ void WorldScreen::render() {
 void WorldScreen::init() {
 	// initialize player
 	auto ecs = ServiceLocator::get_service<FECS>();
-	Entity player = ecs->create_entity();	
-	ecs->attach<Position>(player, Position(0.0f, 0.0f));
-	ecs->attach<Velocity>(player, Velocity(0.0f, 0.0f));
-	ecs->attach<Render>(player, Render{(int)'@', color_from_name("green")});
-	ecs->attach<Player>(player, Player{});
+	ecs->query<PlayerComponent>([&](Entity id, auto& _) {
+		ecs->attach<PositionComponent>(id, PositionComponent(0.0f, 0.0f));
+		ecs->attach<VelocityComponent>(id, VelocityComponent(0.0f, 0.0f));
+		ecs->attach<RenderComponent>(id, {(int)'@', color_from_name("green")});
+	});
 
 	// initialize camera
 	Entity camera = ecs->create_entity();
-	ecs->attach<Camera>(camera, Camera{0.0f, 0.0f});
+	ecs->attach<CameraComponent>(camera, {0.0f, 0.0f});
 }
 
 void WorldScreen::update() {

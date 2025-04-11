@@ -13,7 +13,7 @@ public:
 	void resolve_velocities() {
 		
 		auto ecs = ServiceLocator::get_service<FECS>();
-		ecs->query<Position, Velocity>([&](Entity _, Position& pos, Velocity& vel) {
+		ecs->query<PositionComponent, VelocityComponent>([&](Entity _, auto& pos, auto& vel) {
 			pos.x += vel.x;
 			pos.y += vel.y;
 

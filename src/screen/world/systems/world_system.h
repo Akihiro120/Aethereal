@@ -13,28 +13,32 @@ class WorldSystem {
 public:
 	WorldSystem() {
 	}
-
 	void generate_world() {
 
 		// generate chunks
 		auto ecs = ServiceLocator::get_service<FECS>();
 		m_world = ecs->create_entity();
-		ecs->attach<World>(m_world, {});
+		ecs->attach<WorldComponent>(m_world, {});
 
 		m_noise = FastNoiseLite();
 		m_noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-		m_noise.SetSeed(ecs->get<World>(m_world)->seed);
+		m_noise.SetSeed(ecs->get<WorldComponent>(m_world)->seed);
+		m_noise.SetFractalType(FastNoiseLite::FractalType_FBm);
+		m_noise.SetFrequency(0.005f); // Adjust for terrain scale
+		m_noise.SetFractalOctaves(5); // Number of noise layers
+		m_noise.SetFractalLacunarity(2.0f); // Frequency multiplier between layers
+		m_noise.SetFractalGain(0.5f); // Amplitude multiplier between layers
 
 	}
 
 	void get_bounds(std::function<void(glm::ivec2 chunk_pos, glm::ivec2 offset_idx)> callback) {
 		// generate world
 		auto ecs = ServiceLocator::get_service<FECS>();
-		auto world = ecs->get<World>(m_world);
+		auto world = ecs->get<WorldComponent>(m_world);
 		glm::ivec2 chunk_size = world->chunk_size;
 
 		glm::vec2 player_pos;
-		ecs->query<Player, Position>([&](Entity _, Player&, Position& pos) {
+		ecs->query<PlayerComponent, PositionComponent>([&](Entity _, auto& player, auto& pos) {
 			player_pos = glm::vec2(pos.x, pos.y);
 		});
 
@@ -62,7 +66,7 @@ public:
 
 		// generate world
 		auto ecs = ServiceLocator::get_service<FECS>();
-		auto world = ecs->get<World>(m_world);
+		auto world = ecs->get<WorldComponent>(m_world);
 		glm::ivec2 chunk_size = world->chunk_size;
 
 		get_bounds([&](auto chunk_pos, auto idx) {
@@ -76,7 +80,7 @@ public:
 	void render(const DrawUtils::Box& box) {
 
 		auto ecs = ServiceLocator::get_service<FECS>();
-		auto world = ecs->get<World>(m_world);
+		auto world = ecs->get<WorldComponent>(m_world);
 		glm::ivec2 chunk_size = world->chunk_size;
 
 		get_bounds([&](auto chunk_pos, auto idx) {
@@ -100,31 +104,40 @@ private:
 				const int world_x = x + chunk_pos.x * chunk_size.x;
 				const int world_y = y + chunk_pos.y * chunk_size.y;
 
-				const color_t color = color_from_argb(
-						255, 
-						(world_x * 8) % 255,
-						(world_y * 8) % 255,
-						(world_x + world_y) % 255
-				);
-
 				float height = m_noise.GetNoise((float)world_x, (float)world_y * 2.0f);
+				height = (height + 1.0f) * 0.5f;
 				
-				if (height < 0.0f) {
-					int height_greyscale = (int)(height * 255.0f);
-					chunk.tiles[x + chunk_size.x * y] = Tile {
-						.render = Render {
-							.code = (int)'#', 
-							.color = color_from_argb(255, 
-								(world_x * 8) % 255,
-								(world_y * 8) % 255,
-								height_greyscale	
-							),
-							.bg_color = color_from_argb(255, 
-								height_greyscale, height_greyscale, height_greyscale),
-						},
-						.collidable = true,
-					};
+				color_t fg_color, bg_color;
+				char code = ' ';
+				if (height < 0.3f) {
+					 code = '~'; // Water
+					 fg_color = color_from_argb(255, 255, 255, 255); // White text
+					 bg_color = color_from_argb(255, 0, 0, 255);   // Blue background
+				} else if (height < 0.4f) {
+					 code = '.'; // Beach
+					 fg_color = color_from_argb(255, 0, 0, 0);     // Black text
+					 bg_color = color_from_argb(255, 255, 223, 186); // Sandy beige background
+				} else if (height < 0.6f) {
+					 code = '"'; // Grassland
+					 fg_color = color_from_argb(255, 255, 255, 255); // White text
+					 bg_color = color_from_argb(255, 34, 139, 34);  // Green background
+				} else if (height < 0.8f) {
+					 code = '^'; // Hills
+					 fg_color = color_from_argb(255, 255, 255, 255); // White text
+					 bg_color = color_from_argb(255, 139, 69, 19);  // Brown background
+				} else {
+					 code = '#'; // Mountains
+					 fg_color = color_from_argb(255, 255, 255, 255); // White text
+					 bg_color = color_from_argb(255, 169, 169, 169); // Gray background
 				}
+				chunk.tiles[x + chunk_size.x * y] = Tile {
+					.render = RenderComponent {
+						.code = (int)code, 
+						.color = bg_color,
+						.bg_color = 0x00//bg_color
+					},
+					.collidable = true,
+				};
 			}
 		}
 
@@ -134,7 +147,7 @@ private:
 	void render_chunk(const std::vector<Tile>& tiles, const glm::vec2& offset, glm::ivec2 chunk_size, const DrawUtils::Box& bounds) {
 		int cam_x, cam_y;
 		auto ecs = ServiceLocator::get_service<FECS>();
-		ecs->query<Camera>([&](Entity _, Camera& camera) {
+		ecs->query<CameraComponent>([&](Entity _, auto& camera) {
 			cam_x = camera.tracking_x;
 			cam_y = camera.tracking_y;
 		});

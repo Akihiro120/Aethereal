@@ -12,7 +12,7 @@ public:
 	// control player movement
 	void movement(int key) {
 		auto ecs = ServiceLocator::get_service<FECS>();
-		ecs->query<Player, Velocity>([&](Entity _1, auto& _2, Velocity& vel) {
+		ecs->query<PlayerComponent, VelocityComponent>([&](Entity id, auto& _, auto& vel) {
 			if (key == TK_H || key == TK_LEFT) {
 				vel.x -= 1.0f;
 			}	

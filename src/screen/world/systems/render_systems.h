@@ -16,7 +16,7 @@ public:
 
 		auto ecs = ServiceLocator::get_service<FECS>();
 		int cam_x, cam_y;
-		ecs->query<Camera>([&](Entity _, Camera& camera) {
+		ecs->query<CameraComponent>([&](Entity _, CameraComponent& camera) {
 			cam_x = camera.tracking_x;
 			cam_y = camera.tracking_y;
 		});
@@ -26,7 +26,7 @@ public:
 		const int screen_width = (float)bounds.width;
 		const int screen_height = (float)bounds.height;
 
-		ecs->query<Position, Render>([&](Entity _, Position& pos, Render& render) {
+		ecs->query<PositionComponent, RenderComponent>([&](Entity _, auto& pos, auto& render) {
 				int screen_pos_x = pos.x - cam_x;
 				int screen_pos_y = pos.y - cam_y;
 
