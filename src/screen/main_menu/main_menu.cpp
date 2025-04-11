@@ -6,6 +6,8 @@
 #include "../../game/state/game_state.h"
 #include "../../screen/screen_manager/screen_manager.h"
 #include "name.h"
+#include <fecs.h>
+#include "../../components/player_component.h"
 
 void MainMenu::render() {
 	terminal_color("white");
@@ -42,6 +44,10 @@ void MainMenu::update() {
 		if (key == TK_ENTER) {
 			auto game_state = ServiceLocator::get_service<GameState>();
 			if (m_selected_option == 0) {
+				auto ecs = ServiceLocator::get_service<FECS>();
+				Entity player = ecs->create_entity();
+				ecs->attach<PlayerComponent>(player, {});
+
 				auto scr_manager = ServiceLocator::get_service<ScreenManager>();
 				scr_manager->pop();
 				scr_manager->push(std::make_shared<NameScreen>());

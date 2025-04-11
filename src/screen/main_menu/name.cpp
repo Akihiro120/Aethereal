@@ -5,6 +5,9 @@
 #include "../../input/input_manager.h"
 #include "../screen_manager/screen_manager.h"
 #include "talent.h"
+#include <fecs.h>
+#include "../../components/player_component.h"	
+#include "../../components/name_component.h"
 
 void NameScreen::render() {
 	terminal_color("white");	
@@ -26,8 +29,14 @@ void NameScreen::render() {
 void NameScreen::update() {
 	auto input_mag = ServiceLocator::get_service<InputManager>();
 	input_mag->process_keyboard_input(&m_name);
-	input_mag->process_input([this](int key) {
+	input_mag->process_input([&](int key) {
 		if (key == TK_ENTER && m_name.size() > 0) {
+			auto ecs = ServiceLocator::get_service<FECS>();
+			ecs->query<PlayerComponent>([&](Entity id, auto& _) {
+				ecs->attach<NameComponent>(id, {m_name});
+			});
+
+			// transitiion
 			auto screen_manager = ServiceLocator::get_service<ScreenManager>();	
 			screen_manager->transition(std::make_shared<TalentScreen>());
 		}
