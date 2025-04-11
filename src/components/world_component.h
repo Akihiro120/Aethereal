@@ -12,7 +12,7 @@ namespace std {
 }
 
 struct Tile {
-	Render render;	
+	RenderComponent render;	
 	bool collidable = false;
 };
 
@@ -20,7 +20,7 @@ struct Chunk {
 	std::vector<Tile> tiles;
 };
 
-struct World {
+struct WorldComponent {
 	std::unordered_map<glm::ivec2, Chunk, std::hash<glm::ivec2>> chunks;
 	glm::ivec2 chunk_size = { 8, 8 };
 	int seed = 1234;

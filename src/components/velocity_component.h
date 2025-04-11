@@ -1,10 +1,10 @@
 #pragma once
 
-struct Velocity {
+struct VelocityComponent {
 	float x = 0.0f;
 	float y = 0.0f;
 
-	Velocity() = default;
-	Velocity(float x, float y) : x(x), y(y) {}
-	Velocity(int x, int y) : x((float)x), y((float)y) {}
+	VelocityComponent() = default;
+	VelocityComponent(float x, float y) : x(x), y(y) {}
+	VelocityComponent(int x, int y) : x((float)x), y((float)y) {}
 };
