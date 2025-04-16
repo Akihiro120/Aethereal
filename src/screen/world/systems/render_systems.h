@@ -41,5 +41,8 @@ public:
 				terminal_color(render.color);
 				terminal_put(screen_x + screen_pos_x, screen_y + screen_pos_y, render.code);
 		});
+
+        // reset
+        terminal_bkcolor(color_from_name("black"));
 	}
 };
