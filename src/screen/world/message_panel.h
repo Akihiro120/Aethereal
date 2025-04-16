@@ -11,4 +11,5 @@ public:
 
 private:
 	std::shared_ptr<GameState> m_game_state;
+    int m_msg_offset = 0;
 };

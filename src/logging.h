@@ -22,3 +22,4 @@
 #define AETHEREAL_LOG(msg) \
 	((void)0)
 #endif
+
