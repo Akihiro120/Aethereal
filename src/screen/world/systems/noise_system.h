@@ -13,6 +13,12 @@ public:
 		// setup noise
 		m_noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2S);
 		m_noise.SetSeed(m_seed);
+
+        m_water_noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+        m_water_noise.SetSeed(m_seed);
+
+        m_mountain_noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2S);
+        m_mountain_noise.SetSeed(m_seed);
 	}
 
 	Tile generate(float x, float z) {
@@ -24,6 +30,11 @@ public:
 	}
 
 private:
+    Tile generate_structures(float x, float z) {
+        Tile tile = {};
+        return tile;
+    }
+
 	Tile generate_tile(float x, float z) {
 		// generate the tile
 		Tile tile = {};
@@ -39,52 +50,123 @@ private:
 			frequency *= 4.0f;
 			amplitude *= 0.5f;	
 		}
+        elevation = elevation * 0.5f + 0.5f; // normalize to [0, 1]
 
 		// sample
 		// TODO: add blending and interpolation between elevation levels
-		if (elevation < 0.01) {
+		if (elevation < 0.325f) {
 			// water
+            tile = generate_water_tiles(x, z);
+        } else if (elevation < 0.35f) {
 			tile.render.code = '~';
-			tile.render.color = color_from_name("blue");
-		} else if (elevation < 0.1) {
+			tile.render.color = color_from_name("white");
+		} else if (elevation < 0.4f) {
 			// sand
 			tile.render.code = '-';
 			tile.render.color = color_from_name("yellow");
-		} else if (elevation < 0.7) {
+            tile.tags = {Tag::HARVESTABLE, Tag::PERSISTENT};
+            tile.yield = 0;
+            tile.tile_obj_id = "sand";
+		} else if (elevation < 0.675f) {
 			// grass
 			tile = generate_grassland_tiles(x, z);
-		} else if (elevation < 0.8) {
-			// mountains
-			tile.render.code = 0x25B4;
-			tile.render.color = color_from_name("grey");
-			tile.collidable = true;
-
-			// TODO: use another layer of noise to generate mountain types
 		} else {
-			// snow
-			tile.render.code = 0x25B2;
-			tile.render.color = color_from_name("white");
-		}
+            tile = generate_mountain_tiles(x, z);
+        }
 
 		return tile;
 	}
 
+    Tile generate_mountain_tiles(float x, float z) {
+        Tile tile = {};
+        
+        float mountain_height = 0.0f;
+        float frequency = 0.1f;
+        float amplitude = 1.0f;
+        for (int i = 0; i < 8; i++) {
+            float noise = m_mountain_noise.GetNoise(x * frequency, z * frequency) * amplitude;
+            mountain_height += noise;
+
+            frequency *= 8.0f;
+            amplitude *= 0.5f;	
+        }
+        mountain_height = glm::pow(1.0f * glm::abs(mountain_height), 2);
+        mountain_height = mountain_height * 0.5f + 0.5f; // normalize to [0, 1]
+
+        if (mountain_height < 0.6f) {
+            tile.render.code = 0xf47e;
+            tile.tags = {Tag::HARVESTABLE};
+            tile.yield = random_pcg_range(2, 20);
+
+            float ore = random_pcg_range_float(0.0f, 100.0f);
+            if (ore < 15.0f) {
+                tile.tile_obj_id = "platinum";
+            } else {
+                tile.tile_obj_id = "stone";
+            }
+        } else if (mountain_height < 0.7f) {
+            tile.render.code = 0xeb71;
+            tile.collidable = true;
+        } else if (mountain_height < 0.812f) {
+            tile.render.code = 0x25B2;
+            tile.collidable = true;
+        } else {
+
+        }
+
+        glm::ivec3 mountain_color_light = glm::ivec3(255, 255, 255);
+        glm::ivec3 mountain_color_dark = glm::ivec3(125, 125, 125);
+        float mountain_color_curve = mountain_height * 2.0f - 1.0f;
+        tile.render.color = color_from_argb(255, 
+            glm::mix(mountain_color_dark.r, mountain_color_light.r, mountain_color_curve),
+            glm::mix(mountain_color_dark.g, mountain_color_light.g, mountain_color_curve),
+            glm::mix(mountain_color_dark.b, mountain_color_light.b, mountain_color_curve)
+        ); 
+        
+        return tile;
+    }
+
+    Tile generate_water_tiles(float x, float z) {
+        Tile tile = {};
+        
+        glm::ivec3 water_color_light = glm::ivec3(31, 139, 255);
+        glm::ivec3 water_color_dark = glm::ivec3(0, 204, 240);
+
+        float height = 0.0f;//
+        float frequency = 0.1f;
+        float amplitude = 1.0f;
+        for (int i = 0; i < 8; i++) {
+            float noise = m_water_noise.GetNoise(x * frequency, z * frequency) * amplitude;
+            height += noise;
+
+            frequency *= 6.0f;
+            amplitude *= 0.5f;	
+        }
+        height = height * 0.5f + 0.5f; // normalize to [0, 1]
+
+        if (height < 0.5f) {
+            tile.render.code = '~';
+        } else {
+            tile.render.code = 0x2248;
+        }
+        tile.render.color = color_from_argb(255, 
+            glm::mix(water_color_dark.r, water_color_light.r, height),
+            glm::mix(water_color_dark.g, water_color_light.g, height),
+            glm::mix(water_color_dark.b, water_color_light.b, height)
+        );
+        tile.tags = {Tag::HARVESTABLE, Tag::PERSISTENT};
+        tile.yield = 0;
+        tile.tile_obj_id = "water";
+
+        return tile;
+    }
+
 	Tile generate_grassland_tiles(float x, float z) {
-
-		// generate foliage
-
-		// trees
-		//	rocks
-		//	flowers
-		//	- yellow
-		//	- red
-		//	- grass
-		//	add patches of flowers, grass variants
 
 		Tile tile = {};
 		
 		float grass_chance = random_pcg_range_float(0.0f, 100.0f);
-		if (grass_chance < 10.0f) {
+		if (grass_chance < 7.0f) {
 			
 			int grass_variant = random_pcg_range(0, 3);
 			tile.render.color = color_from_name("green");
@@ -97,7 +179,13 @@ private:
 			} else if (grass_variant == 3) {
 				tile.render.code = '.';
 			}
-		}
+
+		} else if (grass_chance < 15.0f) {
+            tile.render.code = 0x23AF;
+            tile.render.color = color_from_argb(255, 66, 39, 0);
+            tile.tile_obj_id = "stick";
+            tile.tags = {Tag::HARVESTABLE};
+        }
 		
 		return tile;
 	}
@@ -140,4 +228,6 @@ private:
 
 	// noise functions
 	FastNoiseLite m_noise;
+    FastNoiseLite m_water_noise;
+    FastNoiseLite m_mountain_noise;
 };
