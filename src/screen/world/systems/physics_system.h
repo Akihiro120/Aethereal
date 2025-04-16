@@ -7,6 +7,7 @@
 #include "../../../components/velocity_component.h"
 #include "../../../components/world_component.h"
 #include "../../../components/collider_component.h"
+#include "utility.h"
 
 class PhysicsSystem {
 public:
@@ -59,36 +60,12 @@ public:
 					pos_ref->y + vel_ref->y
 				);
 
-				glm::ivec2 pos_chunk = glm::floor(
-					glm::vec2(
-						next_pos.x / (float)world.chunk_size.x,
-						next_pos.y / (float)world.chunk_size.y
-					)
-				);
-
-				glm::ivec2 pos_tile = glm::ivec2(
-					(next_pos.x % world.chunk_size.x + world.chunk_size.x) % world.chunk_size.x,
-					(next_pos.y % world.chunk_size.y + world.chunk_size.y) % world.chunk_size.y
-				);
-
-				// get the chunk bounds, get the adjacent chunks.
-				// Iterate through chunks within the render distance
-				// check if the chunk is real
-				auto it = world.chunks.find(pos_chunk);
-				if (it != world.chunks.end()) {
-					/*for (auto& tile : it->second.tiles) {*/
-					/*	tile.render.bg_color = color_from_name("white");*/
-					/*}*/
-					// get the tiles
-					int index = pos_tile.x + world.chunk_size.x * pos_tile.y;
-					if (index >= 0 && index < it->second.tiles.size() && it->second.tiles[index].collidable) {
-						// TODO: resolve collision via the difference between the collision target
-						// and the entity to still allow the entity to move any number of units
-						/*it->second.tiles[index].render.bg_color = color_from_name("red");*/
-						vel_ref->x = 0;
+                GameUtils::get_tile_world(world, next_pos, [&](Tile* tile) {
+                    if (tile->collidable) {
+                        vel_ref->x = 0;
 						vel_ref->y = 0;
-					}
-				}
+                    }
+                });
 			});
 		});
 
