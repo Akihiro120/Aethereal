@@ -6,6 +6,13 @@
 #include "../screen/screen_manager/screen_manager.h"
 #include "../screen/main_menu/main_menu.h"
 #include "../data/database/database.h"
+#include "../components/camera_component.h"
+#include "../components/player_component.h"
+#include "../components/inventory/inventory_component.h"
+#include "../components/interaction/harvest_component.h"
+#include "../components/interaction/input_mode_component.h"
+#include "../components/world_component.h"
+#include "../components/identifiers/harvest_indicator_component.h"
 
 Game::Game() {
 
@@ -24,6 +31,18 @@ Game::Game() {
 
 	// add main menu starting screen
 	ServiceLocator::get_service<ScreenManager>()->push(std::make_shared<MainMenu>());
+
+    // register components
+    auto ecs = ServiceLocator::get_service<FECS>();
+    ecs->preregister_component<CameraComponent>();
+    ecs->preregister_component<PlayerComponent>();
+    ecs->preregister_component<InventoryComponent>();
+    ecs->preregister_component<InventoryAddItemComponent>();
+    ecs->preregister_component<InventoryRemoveItemComponent>();
+    ecs->preregister_component<InputModeComponent>();
+    ecs->preregister_component<WorldComponent>();
+    ecs->preregister_component<HarvestComponent>();
+    ecs->preregister_component<HarvestIndicatorComponent>();
 }
 
 Game::~Game() {
@@ -54,7 +73,8 @@ void Game::update() {
 
 	// escape game
 	input_mag->process_input([](int key) {
-		if (key == TK_ESCAPE) ServiceLocator::get_service<GameState>()->close_game();
+		float time = ServiceLocator::get_service<GameState>()->get_time();
+		if (key == TK_CLOSE && time > 0.1f) ServiceLocator::get_service<GameState>()->close_game();
 	});
 
 	// update screen manager
