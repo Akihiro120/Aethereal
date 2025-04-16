@@ -11,7 +11,7 @@ Game::Game() {
 
 	// Initialize terminal
 	terminal_open();
-	terminal_set("window: size=160x50, title='Aethereal', resizable=true; font: ../resources/fonts/CascadiaCove.ttf, size=18, hinting=normal;");
+	terminal_set("window: size=160x50, title='Aethereal', resizable=true; font: ../resources/fonts/CascadiaCove.ttf, size=16, hinting=normal;");
 
 	// initialize
 	ServiceLocator::provide(std::make_shared<InputManager>());
@@ -32,10 +32,14 @@ Game::~Game() {
 }
 
 void Game::run() {
+	std::shared_ptr<GameState> state = ServiceLocator::get_service<GameState>();
+
 	// Main game loop
-	while (ServiceLocator::get_service<GameState>()->is_game_running()) {
+	while (state->is_game_running()) {
+		state->calculate_time();
 		update();
 		render();
+		/*state->end_time();*/
 	}
 }
 
