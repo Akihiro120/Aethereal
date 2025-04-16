@@ -3,6 +3,7 @@
 #include "../../input/input_manager.h"
 #include "../../components/camera_component.h"
 #include "../../components/player_component.h"
+#include "../../components/collider_component.h"
 #include "BearLibTerminal.h"
 
 WorldScreen::WorldScreen() {
@@ -28,6 +29,9 @@ void WorldScreen::init() {
 		ecs->attach<PositionComponent>(id, PositionComponent(0.0f, 0.0f));
 		ecs->attach<VelocityComponent>(id, VelocityComponent(0.0f, 0.0f));
 		ecs->attach<RenderComponent>(id, {(int)'@', color_from_name("green")});
+		ecs->attach<ColliderComponent>(id, {
+			// insert player on_collision logic here
+		});
 	});
 
 	// initialize camera
@@ -43,6 +47,8 @@ void WorldScreen::update() {
 		// process input for player movement
 		m_player_system.movement(key);
 	});
+	m_physics_system.calculate_spatial_map();
+	m_physics_system.resolve_collisions();
 	m_physics_system.resolve_velocities();
 	m_game_panel.update();
 }
