@@ -4,7 +4,6 @@
 #include "../../../components/position_component.h"
 #include "../../../components/camera_component.h"
 #include "BearLibTerminal.h"
-#include <random>
 
 WorldSystem::WorldSystem() {}
 
@@ -13,15 +12,6 @@ void WorldSystem::generate_world() {
     m_ecs = ServiceLocator::get_service<FECS>();
     m_world = m_ecs->create_entity();
     m_ecs->attach<WorldComponent>(m_world, {});
-
-    // Generate a random seed for procedural generation
-    std::random_device rd;
-    m_seed = (static_cast<uint64_t>(rd()) << 32) | rd();
-
-    // Set up noise generator
-    m_noise = FastNoiseLite();
-    m_noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    m_noise.SetSeed(random_pcg());
 }
 
 void WorldSystem::get_bounds(std::function<void(glm::ivec2 chunk_pos, glm::ivec2 offset_idx)> callback) {
@@ -84,99 +74,7 @@ void WorldSystem::render(const DrawUtils::Box& box) {
     });
 }
 
-inline int32_t WorldSystem::random_pcg() {
-    // PCG-based random number generation algorithm
-    m_seed = m_seed * 747796405u + 2891336453u;
-    uint32_t word = ((m_seed >> ((m_seed >> 28u) + 4u)) ^ m_seed) * 277803737u;
-    return (word >> 22u) ^ word;
-}
 
-inline float WorldSystem::random_pcg_float() {
-    // Generate a random float between 0.0 and 1.0
-    union {uint32_t i; float f;} u;
-    u.i = (127 << 23) | (random_pcg() >> 9);
-    return u.f - 1.0f;
-}
-
-inline int32_t WorldSystem::random_pcg_range(int32_t min, int32_t max) {
-    // Generate a random integer in the range [min, max]
-    uint32_t range = max - min + 1;
-    return min + ((uint64_t)random_pcg() * range >> 32);
-}
-
-inline float WorldSystem::random_pcg_range_float(float min, float max) {
-    // Generate a random float in the range [min, max]
-    return min + (max - min) * random_pcg_float();
-    
-}
-
-// world generation type shit
-
-
-Tile WorldSystem::generate(float world_x, float world_y) {
-    // Generate noise-based height for the tile
-
-    // fbm
-    float amp = m_amplitude;
-    float freq = m_frequency;
-    float height = 0.0f;
-    for (int i = 0; i < 4; i++) {
-
-        height += m_noise.GetNoise(world_x * freq / 2.0f, world_y * freq) * amp;
-
-        // fbm
-        amp *= 0.5f;
-        freq *= 2.0f;
-    }
-
-    // normalize
-    height = (height + 1.0f) * 0.5f;
-
-    // base tile data
-    RenderComponent r;
-    bool c = false;
-
-    // Assign tile properties based on the height value
-    if (height < 0.05f) {
-        r = {
-            .code = 0x2248,
-            .color = color_from_name("blue"),
-            .bg_color = color_from_name("black")
-        };
-    } else if (height <= 0.7f) {
-        float foliage_bias = random_pcg_range_float(0.0f, 1.0f);
-        if (foliage_bias < 0.05f) {
-            r = {
-                .code = 0x2663,
-                .color = color_from_name("dark green"),
-                .bg_color = color_from_name("black")
-            };
-        } else if (foliage_bias <= 0.15f) {
-            r = {
-                .code = (int)',',
-                .color = color_from_name("green"),
-                .bg_color = color_from_name("black")
-            };
-        }
-    } else if (height <= 0.8f) {
-        r = {
-            .code = 0x25B4,
-            .color = color_from_name("grey"),
-            .bg_color = color_from_name("black")
-        };
-    } else if (height <= 1.0f) {
-        r = {
-            .code = 0x25B2,
-            .color = color_from_name("white"),
-            .bg_color = color_from_name("black")
-        };
-    }
-    
-    return {
-        .render = r,
-        .collidable = c
-    };
-}
 
 Chunk WorldSystem::generate_chunk(glm::ivec2 chunk_size, glm::ivec2 chunk_pos) {
     // Initialize a new chunk and allocate space for tiles
@@ -188,7 +86,7 @@ Chunk WorldSystem::generate_chunk(glm::ivec2 chunk_size, glm::ivec2 chunk_pos) {
         for (int x = 0; x < chunk_size.x; x++) {
             const int world_x = x + chunk_pos.x * chunk_size.x;
             const int world_y = y + chunk_pos.y * chunk_size.y;
-            chunk.tiles[x + chunk_size.x * y] = generate(world_x, world_y);
+            chunk.tiles[x + chunk_size.x * y] = m_noise_system.generate(world_x, world_y);
         }
     }
 
@@ -212,8 +110,8 @@ void WorldSystem::render_chunk(const std::vector<Tile>& tiles, const glm::vec2& 
     // Render each tile in the chunk if visible on screen
     for (int y = 0; y < chunk_size.y; y++) {
         for (int x = 0; x < chunk_size.x; x++) {
-            const int pos_x = x + offset.x - cam_x;
-            const int pos_y = y + offset.y - cam_y;
+            const int pos_x = x + offset.x - cam_x + 1;
+            const int pos_y = y + offset.y - cam_y + 1;
 
             if (pos_x < screen_x || pos_x >= screen_width || pos_y < screen_y || pos_y >= screen_height) {
                 continue;
