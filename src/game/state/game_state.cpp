@@ -75,3 +75,11 @@ void GameState::end_time() {
       std::this_thread::sleep_for(frame_duration - time_spent);
    }
 }
+
+void GameState::log(const std::string& message) {
+    m_log.push_back(message);
+}
+
+std::vector<std::string> GameState::get_log() const {
+    return m_log;
+}

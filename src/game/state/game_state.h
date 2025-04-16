@@ -1,5 +1,7 @@
 #pragma once
 #include <chrono>
+#include <vector>
+#include <string>
 
 class GameState {
 public:
@@ -19,6 +21,10 @@ public:
 	void set_frame_time(double frame_time);
 	void set_time(double time);
 
+    // ingame logging
+    void log(const std::string& message);
+    std::vector<std::string> get_log() const;
+
 private:
 	bool m_game_running = true;
 
@@ -30,4 +36,7 @@ private:
 	double m_frame_time = 0.0;
 	double m_frame_count = 0.0;
 	uint32_t m_frame_cap = 60;
+
+    // logging
+    std::vector<std::string> m_log;
 };
