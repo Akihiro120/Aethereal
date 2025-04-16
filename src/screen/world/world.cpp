@@ -4,6 +4,8 @@
 #include "../../components/camera_component.h"
 #include "../../components/player_component.h"
 #include "../../components/collider_component.h"
+#include "../../components/interaction/input_mode_component.h"
+#include "../../components/inventory/inventory_component.h"
 #include "BearLibTerminal.h"
 
 WorldScreen::WorldScreen() {
@@ -32,6 +34,8 @@ void WorldScreen::init() {
 		ecs->attach<ColliderComponent>(id, {
 			// insert player on_collision logic here
 		});
+        ecs->attach<InventoryComponent>(id, InventoryComponent{});
+        ecs->attach<InputModeComponent>(id, InputModeComponent{InputModeComponent::InputMode::DEFAULT});
 	});
 
 	// initialize camera
@@ -41,14 +45,8 @@ void WorldScreen::init() {
 
 void WorldScreen::update() {
 
-	auto input = ServiceLocator::get_service<InputManager>();
-	input->process_input([this](int key) {
-
-		// process input for player movement
-		m_player_system.movement(key);
-	});
-	m_physics_system.calculate_spatial_map();
-	m_physics_system.resolve_collisions();
-	m_physics_system.resolve_velocities();
+    // update panels
+    m_status_panel.update();
+    m_message_panel.update();
 	m_game_panel.update();
 }
