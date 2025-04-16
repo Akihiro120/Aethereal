@@ -2,11 +2,13 @@
 #include <vector>
 #include <functional>
 #include <fecs.h>
+#include <memory>
 
-struct Item {
+struct ItemComponent {
 	// item data
 	std::string name = "";
 	std::string desc = "";
+    int amount = 0;
 
 	// item functionality
 	std::function<void(std::shared_ptr<FECS>)> on_usage;
@@ -14,21 +16,16 @@ struct Item {
 	std::function<void(std::shared_ptr<FECS>)> on_pickup;
 };
 
-struct InventoryItem {
-	Item item;
-	uint32_t amount;
-};
-
 struct InventoryComponent {
-	std::vector<InventoryItem> items;
+	std::vector<ItemComponent> items;
 };
 
 // inventory callback/delegate components
-struct InventoryInsert {
-	InventoryItem added_item;
+struct InventoryAddItemComponent {
+    ItemComponent item;
 };
 
-struct InventoryRemove {
+struct InventoryRemoveItemComponent {
 	uint32_t index;
 	uint32_t amount;
 };
