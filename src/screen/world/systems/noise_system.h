@@ -33,26 +33,31 @@ private:
 		float amplitude = 1.0f;
 		float elevation = 0.0f;//compute_noise(x, z);
 		for (int i = 0; i < 8; i++) {
-			float noise = compute_noise(x * frequency, z * frequency);
-			elevation += noise * amplitude;
+			float noise = compute_noise(x * frequency, z * frequency) * amplitude;
+			elevation += noise;
 
-			frequency *= 2.0f;
+			frequency *= 4.0f;
 			amplitude *= 0.5f;	
 		}
 
 		// sample
 		// TODO: add blending and interpolation between elevation levels
-		if (elevation < 0.3) {
+		if (elevation < 0.01) {
 			// water
 			tile.render.code = '~';
 			tile.render.color = color_from_name("blue");
-		} else if (elevation < 0.8) {
+		} else if (elevation < 0.1) {
+			// sand
+			tile.render.code = '-';
+			tile.render.color = color_from_name("yellow");
+		} else if (elevation < 0.7) {
 			// grass
 			tile = generate_grassland_tiles(x, z);
-		} else if (elevation < 0.9) {
+		} else if (elevation < 0.8) {
 			// mountains
 			tile.render.code = 0x25B4;
 			tile.render.color = color_from_name("grey");
+			tile.collidable = true;
 
 			// TODO: use another layer of noise to generate mountain types
 		} else {
@@ -74,45 +79,26 @@ private:
 		//	- yellow
 		//	- red
 		//	- grass
+		//	add patches of flowers, grass variants
 
 		Tile tile = {};
-
-		float foliage_bias = random_pcg_range_float(0, 4);
-		if (foliage_bias < 0.5) {
-			int tree_type = random_pcg_range(0, 1);
-			if (tree_type == 0) {
-				tile.render.code = 0x2660; // tree
-				tile.render.color = color_from_name("green");
-			} else {
-				tile.render.code = 0x2663; // tree
-				tile.render.color = color_from_name("green");
-			}
-		} else if (foliage_bias < 1.0) {
-			int rock_type = random_pcg_range(0, 1);
-			if (rock_type == 0) {
-				tile.render.code = 0x25A0; // rock
-				tile.render.color = color_from_name("grey");
-			} else {
-				tile.render.code = 0x25AA; // stone
-				tile.render.color = color_from_name("grey");
-			}
-		} else if (foliage_bias < 2.0) {
-			int flower_type = random_pcg_range(0, 2);
-			if (flower_type == 0) {
-				tile.render.code = 0x03B3; // flower
-				tile.render.color = color_from_name("yellow");
-			} else if (flower_type == 1) {
-				tile.render.code = 0x03A8; // flower
-				tile.render.color = color_from_name("red");
-			} else {
-				tile.render.code = 0x03A9; // flower
-				tile.render.color = color_from_argb(255, 79, 202, 255);
-			}
-		} else {
-			tile.render.code = ','; // grass
+		
+		float grass_chance = random_pcg_range_float(0.0f, 100.0f);
+		if (grass_chance < 10.0f) {
+			
+			int grass_variant = random_pcg_range(0, 3);
 			tile.render.color = color_from_name("green");
-		}	
-
+			if (grass_variant == 0) {
+				tile.render.code = ',';
+			} else if (grass_variant == 1) {
+				tile.render.code = '"';
+			} else if (grass_variant == 2) {
+				tile.render.code = '\'';
+			} else if (grass_variant == 3) {
+				tile.render.code = '.';
+			}
+		}
+		
 		return tile;
 	}
 
