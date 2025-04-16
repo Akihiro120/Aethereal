@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "render_component.h"
+#include "tags.h"
 
 namespace std {
 	template <>
@@ -13,6 +14,9 @@ namespace std {
 
 struct Tile {
 	RenderComponent render;	
+    std::vector<Tag> tags;
+    std::string tile_obj_id = "";
+    int yield = 1;
 	bool collidable = false;
 };
 
