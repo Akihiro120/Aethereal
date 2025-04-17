@@ -4,7 +4,7 @@
 #include <memory>
 #include "../../input/input_manager.h"
 #include "../screen_manager/screen_manager.h"
-#include "../../game./state/game_state.h"
+#include "../../game/state/game_state.h"
 #include "../utilities/draw_utilities.h"
 
 using namespace DrawUtils;
