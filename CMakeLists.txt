@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.25)
 project(Aethereal)
+SET (CMAKE_CXX_COMPILER "/usr/bin/clang++" CACHE STRING "C++ compiler" FORCE)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
 
 include_directories(${PROJECT_NAME}
 	includes
@@ -21,6 +20,10 @@ add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 # Check for Windows and link appropriate libraries
 if (WIN32)
 	target_link_libraries(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/libs/bearlibterminal/win64/BearLibTerminal.lib)
+endif()
+
+if (UNIX)
+	target_link_libraries(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/libs/bearlibterminal/linux/libBearLibTerminal.so)
 endif()
 
 # Checks if OSX and links appropriate frameworks (only required on MacOS)
