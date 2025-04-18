@@ -75,6 +75,9 @@ void Game::update() {
 	input_mag->process_input([](int key) {
 		float time = ServiceLocator::get_service<GameState>()->get_time();
 		if (key == TK_CLOSE && time > 0.1f) ServiceLocator::get_service<GameState>()->close_game();
+		if (terminal_state(TK_CONTROL) && key == TK_ESCAPE) {
+			ServiceLocator::get_service<GameState>()->close_game();
+		}
 	});
 
 	// update screen manager
