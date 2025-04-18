@@ -62,7 +62,7 @@ private:
 			tile.render.color = color_from_name("white");
 		} else if (elevation < 0.4f) {
 			// sand
-			tile.render.code = '-';
+			tile.render.code = '+';
 			tile.render.color = color_from_name("yellow");
             tile.tags = {Tag::HARVESTABLE, Tag::PERSISTENT};
             tile.yield = 0;
@@ -180,7 +180,7 @@ private:
 				tile.render.code = '.';
 			}
 
-		} else if (grass_chance < 15.0f) {
+		} else if (grass_chance < 8.0f) {
             tile.render.code = 0x23AF;
             tile.render.color = color_from_argb(255, 66, 39, 0);
             tile.tile_obj_id = "stick";
