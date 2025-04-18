@@ -3,6 +3,7 @@
 #include "../../utilities/draw_utilities.h"
 #include "../../../components/world_component.h"
 #include "noise_system.h"
+#include <memory>
 
 class WorldSystem {
 public:
