@@ -3,6 +3,7 @@
 #include <bitset>
 #include <typeindex>
 #include <unordered_map>
+#include <cstdint>
 
 #define MAX_COMPONENTS 100
 
