@@ -1,2 +1,45 @@
 {
+	"noise_layers": [
+		{
+			"id": "height_noise",
+			"settings": {
+				"type": "perlin",
+				"fractal_type": "fbm",
+				"amplitude": 1.0,
+				"frequency": 1.0,
+				"octave": 1,
+				"persistence": 0.5,
+				"lacunarity": 2.0
+			}
+		},
+		{
+			"id": "ocean_noise",
+			"settings": {
+				"type": "perlin",
+				"fractal_type": "fbm",
+				"amplitude": 1.0,
+				"frequency": 1.0,
+				"octave": 1,
+				"persistence": 0.5,
+				"lacunarity": 2.0
+			}
+		},
+		{
+			"id": "mountain_noise",
+			"settings": {
+				"type": "perlin",
+				"fractal_type": "fbm",
+				"amplitude": 1.0,
+				"frequency": 1.0,
+				"octave": 1,
+				"persistence": 0.5,
+				"lacunarity": 2.0
+			}
+		}
+	],
+	"biomes": [
+		{
+			"noise_layer": "",
+		}
+	]
 }
