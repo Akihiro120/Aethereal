@@ -1,8 +1,10 @@
-#include <iostream>
+#include <cstdlib>
+#include "src/game/game.h"
 
 int main()
 {
-    std::cout << "Hello, World" << std::endl;
+    Aethereal::Aethereal aethereal;
+    aethereal.Run();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
