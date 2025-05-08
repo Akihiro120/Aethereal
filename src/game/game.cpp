@@ -14,21 +14,29 @@ namespace Aethereal
           m_ComponentRoot(ConstructSceneRoot()),
           m_RenderLoop(&m_InteractiveScreen, m_ComponentRoot)
     {
-
-        // Define input controls
-        m_ComponentRoot |= CatchEvent([&](Event e)
-        {
-            return false;
-        });
     }
 
     Component Aethereal::ConstructSceneRoot()
     {
         // Construct the scene root
-        return Renderer([&]
+        Component root = Renderer([&]
         {
-            return text("Aethereal");
+            return text("Hello, World");
         });
+
+        // Define input controls
+        root |= CatchEvent([&](Event e)
+        {
+            if (e == Event::Character('q'))
+            {
+                // Quit the game, close the window
+                m_InteractiveScreen.ExitLoopClosure()();
+                return true;
+            }
+            return false;
+        });
+
+        return root;
     }
 
     Aethereal::~Aethereal()
