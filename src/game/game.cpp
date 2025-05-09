@@ -5,6 +5,10 @@
 // ftxui
 #include <ftxui/component/component.hpp>
 
+// Aethereal
+#include "../services/service_locator/service_locator.h"
+#include "../screen/manager/screen_manager.h"
+
 namespace Aethereal
 {
     using namespace ftxui;
@@ -18,10 +22,12 @@ namespace Aethereal
 
     Component Aethereal::ConstructSceneRoot()
     {
+        auto sl = Service::ServiceLocator::Get<Screen::ScreenManager>();
+
         // Construct the scene root
-        Component root = Renderer([&]
+        Component root = Renderer(sl->GetRootComponent(), [&]
         {
-            return text("Hello, World");
+            return sl->GetRootComponent()->Render();
         });
 
         // Define input controls
