@@ -5,7 +5,7 @@ Aethereal is a text-based RPG developed in C++. This project aims to deliver an 
 
 ## Features
 - Text-based RPG adventure with immersive storytelling
-- Built with BearLibTerminal for enhanced terminal visuals
+- Built with raylib for enhanced terminal visuals
 - Character development and progression systems
 - Real-time combat mechanics
 
@@ -15,7 +15,6 @@ Aethereal is a text-based RPG developed in C++. This project aims to deliver an 
 - C++ compiler (clangd recommended)
 - CMake (version 3.10 or higher)
 - Ninja build system
-- BearLibTerminal library
 
 ### Installation
 
