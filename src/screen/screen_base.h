@@ -1,24 +1,27 @@
 #pragma once
 #include "screen_interface.h"
+#include "../terminal/terminal.h"
 
 namespace Aethereal::Screen
 {
     class ScreenBase : public IScreen
     {
     public:
-        ScreenBase(Component root)
-            : m_RootComponent(root)
+        ScreenBase()
         {
         }
 
         ~ScreenBase() = default;
 
-        virtual Component GetComponent() const override
+        virtual void Render()
         {
-            return m_RootComponent;
+            Terminal::Print(1, 1, "Nothing to see here!!!");
+        }
+
+        virtual void Update()
+        {
         }
 
     protected:
-        Component m_RootComponent;
     };
 }
