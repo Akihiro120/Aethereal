@@ -1,24 +1,27 @@
 #pragma once
 #include "../../screen_base.h"
+#include "../../../services/injector/injector.h"
+#include "../../manager/screen_manager.h"
 #include <vector>
+#include <string>
 
 namespace Aethereal::Screen
 {
     namespace MainMenu
     {
-        class Menu : public Aethereal::Screen::ScreenBase
+        class Menu : public ScreenBase,
+                     public Service::Injector<Menu, ScreenManager>
         {
         public:
             Menu();
             ~Menu();
 
-        private:
-            Component CreateSceneRoot();
+            virtual void Render() override;
+            virtual void Update() override;
 
-            // Option Menu
-            Component m_OptionMenu;
+        private:
             std::vector<std::string> m_Options;
-            int m_OptionMenuSelection = 0;
+            std::uint32_t m_Selection = 0;
         };
     }
 }
