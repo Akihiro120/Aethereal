@@ -2,20 +2,41 @@
 
 namespace Aethereal::Screen
 {
-    Component ScreenManager::GetRootComponent()
+    void ScreenManager::Replace(std::shared_ptr<ScreenBase> scr)
     {
-        // Display an empty msg if no screens are active
+        m_Screens.clear();
+        m_Screens.push_back(scr);
+    }
+
+    void ScreenManager::Overlay(std::shared_ptr<ScreenBase> scr)
+    {
+        m_Screens.push_back(scr);
+    }
+
+    void ScreenManager::Pop()
+    {
+        m_Screens.pop_back();
+    }
+
+    void ScreenManager::Render()
+    {
         if (m_Screens.empty())
         {
-            return Renderer([&]
-            {
-                return text("Nothing to see here...");
-            });
+            Terminal::Print(0, 0, "No screen available for display!!!");
         }
 
-        return Renderer(m_Screens.back()->GetComponent(), [&]
+        for (auto& screen : m_Screens)
         {
-            return m_Screens.back()->GetComponent()->Render();
-        });
+            screen->Render();
+        }
     }
+
+    void ScreenManager::Update()
+    {
+        if (!m_Screens.empty())
+        {
+            m_Screens.back()->Update();
+        }
+    }
+
 }
