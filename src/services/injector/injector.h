@@ -15,7 +15,7 @@ namespace Aethereal::Service
         }
 
         template <typename T>
-        std::shared_ptr<T> Get()
+        std::shared_ptr<T> GetInjection()
         {
             return std::get<std::shared_ptr<T>>(m_Dependencies);
         }
