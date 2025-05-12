@@ -50,7 +50,7 @@ namespace Aethereal
         s_FontSize = info.fontSize;
 
         // Init
-        SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+        SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
         InitWindow(1, 1, info.title.c_str());
 
         s_Codepoints.resize(256);
