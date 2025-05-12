@@ -15,7 +15,7 @@ namespace Aethereal::Service
             auto it = Get().m_Services.find(typeid(T));
             if (it != Get().m_Services.end())
             {
-                Utility::ERROR("Service Locator: Service already Registered");
+                Utility::Logging::ERROR("Service Locator: Service already Registered");
             }
 
             Get().m_Services[typeid(T)] = std::move(srv);
@@ -27,7 +27,7 @@ namespace Aethereal::Service
             auto it = Get().m_Services.find(typeid(T));
             if (it == Get().m_Services.end())
             {
-                Utility::ERROR("Service Locator: Service not Found: " + std::string(typeid(T).name()));
+                Utility::Logging::ERROR("Service Locator: Service not Found: " + std::string(typeid(T).name()));
             }
 
             return std::static_pointer_cast<T>(it->second);

@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "naming.h"
 
 namespace Aethereal::Screen
 {
@@ -66,6 +67,7 @@ namespace Aethereal::Screen
 
                 if (m_Selection == 0)
                 {
+                    sm->Replace(std::make_shared<Naming>());
                 }
 
                 if (m_Selection == 1)
