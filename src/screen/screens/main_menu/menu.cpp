@@ -62,11 +62,23 @@ namespace Aethereal::Screen
             if (IsKeyPressed(KEY_ENTER))
             {
                 // Goto next screen
-                auto sm = Get<ScreenManager>();
+                auto sm = GetInjection<ScreenManager>();
+
+                if (m_Selection == 0)
+                {
+                }
+
+                if (m_Selection == 1)
+                {
+                }
+
+                if (m_Selection == 2)
+                {
+                }
 
                 if (m_Selection == 3)
                 {
-                    CloseWindow();
+                    GetInjection<State::GameState>()->StopRunning();
                 }
             }
         }
