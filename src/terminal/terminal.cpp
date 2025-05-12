@@ -44,11 +44,6 @@ namespace Aethereal
         s_CurrentBGColor = BLACK;
         s_CurrentFGColor = WHITE;
 
-        s_Width = info.width;
-        s_Height = info.height;
-        s_FontPath = info.fontPath;
-        s_FontSize = info.fontSize;
-
         // Init
         SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
         InitWindow(1, 1, info.title.c_str());
@@ -63,6 +58,7 @@ namespace Aethereal
         int glyphCount = 256;
 
         s_Font = LoadFontEx(info.fontPath.c_str(), info.fontSize, s_Codepoints.data(), glyphCount);
+        SetTextureFilter(s_Font.texture, TEXTURE_FILTER_POINT);
 
         s_CellWidth = 0;
         s_CellHeight = 0;
@@ -74,13 +70,19 @@ namespace Aethereal
             s_CellHeight = std::max((int) s_CellHeight, (int) r.height);
         }
 
-        SetWindowSize(s_Width * s_CellWidth, s_Height * s_CellHeight);
-        SetWindowPosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
+        int winW = int(info.width) * int(s_CellWidth);
+        int winH = int(info.height) * int(s_CellHeight);
+        SetWindowSize(winW, winH);
+        SetWindowPosition((GetMonitorWidth(0) - winW) / 2, (GetMonitorHeight(0) - winH) / 2);
         SetTargetFPS(60);
 
-        s_InitialWidth = GetScreenWidth();
-        s_InitialHeight = GetScreenHeight();
+        s_InitialWidth = winW;
+        s_InitialHeight = winH;
         s_InitialFontSize = info.fontSize;
+        s_Width = info.width;
+        s_Height = info.height;
+        s_FontPath = info.fontPath;
+        s_FontSize = info.fontSize;
 
         // Initialize buffers
         s_Cells.assign(s_Width * s_Height, Cell{});
@@ -146,10 +148,14 @@ namespace Aethereal
                     float glyphWidth = src.width;
                     float glyphHeight = src.height;
 
-                    float baselineY = y * s_CellHeight + (s_CellHeight - s_Font.baseSize) * 0.5f;
-                    float dstY = baselineY + info.offsetY;
+                    float dstX = x * s_CellWidth + (s_CellWidth - info.advanceX) * 0.5f;
+                    float dstY = y * s_CellHeight + (s_CellHeight - s_Font.baseSize) * 0.5f;
 
-                    float dstX = x * s_CellWidth + (s_CellWidth - glyphWidth) * 0.5f;
+                    dstX += info.offsetX;
+                    dstY += info.offsetY;
+
+                    dstX = std::round(dstX);
+                    dstY = std::round(dstY);
 
                     Rectangle dst = {(float) dstX,
                                      (float) dstY,
