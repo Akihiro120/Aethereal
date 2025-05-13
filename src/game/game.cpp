@@ -3,14 +3,13 @@
 // Aethereal
 #include "../services/service_locator/service_locator.h"
 #include "../screen/manager/screen_manager.h"
-#include "../terminal/terminal.h"
 #include "../screen/screens/main_menu/menu.h"
 #include "state/game_state.h"
-#include <raylib.h>
 #include <fecs/fecs.h>
 #include "../components/tags/player_component.h"
 #include "../components/character/name_component.h"
 #include "../database/database.h"
+#include "../terminal/terminal.h"
 
 namespace Aethereal
 {
@@ -28,13 +27,6 @@ namespace Aethereal
         ServiceLocator::RegisterService(std::make_shared<Database>());
 
         // Setup Terminal
-        TerminalCreateInfo info;
-        info.width = 160;
-        info.height = 50;
-        info.fontSize = 18;
-        info.fontPath = "../resources/font/CascadiaCove.ttf";
-        info.title = "Aethereal";
-        Terminal::Open(info);
 
         // set the first screen
         ServiceLocator::Get<ScreenManager>()->Overlay(std::make_shared<MainMenu::Menu>());
@@ -43,12 +35,17 @@ namespace Aethereal
         auto db = ServiceLocator::Get<Database>();
         db->LoadFromDirectory("json/");
 
+        // TODO: Abstract this into its own file for clean-ish-ness
+
         // ecs setup
         // PERF: Use Reserve functionality in ECS
         auto ecs = ServiceLocator::Get<FECS::Registry>();
         // ecs->GetEntityManager().Reserve(1000);
         ecs->RegisterComponent<Tags::PlayerComponent>();
         ecs->RegisterComponent<Character::NameComponent>();
+
+        // terminal
+        Terminal::Open();
     }
 
     Aethereal::~Aethereal()
@@ -60,7 +57,7 @@ namespace Aethereal
     void Aethereal::Run()
     {
         // Render loop.
-        while (Terminal::IsWindowOpen() && ServiceLocator::Get<GameState>()->IsGameRunning())
+        while (ServiceLocator::Get<GameState>()->IsGameRunning())
         {
             // Progress the game's lifecycle.
             Update();
@@ -74,12 +71,13 @@ namespace Aethereal
     {
         Terminal::Clear();
         ServiceLocator::Get<ScreenManager>()->Render();
-
+        Terminal::Print(0, 0, "Hello, World!!!");
         Terminal::Refresh();
     }
 
     void Aethereal::Update()
     {
+        Terminal::Poll();
         ServiceLocator::Get<ScreenManager>()->Update();
     }
 

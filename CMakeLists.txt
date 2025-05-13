@@ -6,35 +6,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(AETHEREAL_VENDOR_DIR ${CMAKE_SOURCE_DIR}/vendor/includes)
-
-set(RAYLIB_VERSION 5.5)
-find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
-if (NOT raylib_FOUND) # If there's none, fetch and build raylib
-  include(FetchContent)
-  FetchContent_Declare(
-    raylib
-    DOWNLOAD_EXTRACT_TIMESTAMP OFF
-    URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
-  )
-  FetchContent_GetProperties(raylib)
-  if (NOT raylib_POPULATED) # Have we downloaded raylib yet?
-    set(FETCHCONTENT_QUIET NO)
-    FetchContent_MakeAvailable(raylib)
-  endif()
-endif()
+set(AETHEREAL_LIB_DIR ${CMAKE_SOURCE_DIR}/vendor/libs)
 
 file (GLOB_RECURSE SOURCES 
 	src/*.cpp
 )
 
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(notcurses REQUIRED IMPORTED_TARGET notcurses)
+pkg_check_modules(notcurses++ REQUIRED IMPORTED_TARGET notcurses++)
+
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${AETHEREAL_VENDOR_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::notcurses PkgConfig::notcurses++)
 
-if (APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE "-framework IOKit")
-    target_link_libraries(${PROJECT_NAME} PRIVATE "-framework Cocoa")
-    target_link_libraries(${PROJECT_NAME} PRIVATE "-framework OpenGL")
-endif()

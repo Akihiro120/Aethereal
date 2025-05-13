@@ -1,6 +1,5 @@
 #pragma once
 #include "screen_interface.h"
-#include "../terminal/terminal.h"
 
 namespace Aethereal::Screen
 {
@@ -15,7 +14,6 @@ namespace Aethereal::Screen
 
         virtual void Render()
         {
-            Terminal::Print(1, 1, "Nothing to see here!!!");
         }
 
         virtual void Update()
