@@ -12,14 +12,8 @@ file (GLOB_RECURSE SOURCES
 	src/*.cpp
 )
 
-find_package(PkgConfig REQUIRED)
-
-pkg_check_modules(notcurses REQUIRED IMPORTED_TARGET notcurses)
-pkg_check_modules(notcurses++ REQUIRED IMPORTED_TARGET notcurses++)
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${AETHEREAL_VENDOR_DIR})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::notcurses PkgConfig::notcurses++)
 
