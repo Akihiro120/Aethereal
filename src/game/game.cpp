@@ -6,17 +6,19 @@
 #include "../screen/screens/main_menu/menu.h"
 #include "state/game_state.h"
 #include <fecs/fecs.h>
+<<<<<<< HEAD
 #include "../components/tags/player_component.h"
 #include "../components/character/name_component.h"
 #include "../database/database.h"
 #include "../terminal/terminal.h"
+=======
+>>>>>>> parent of 4452e5f (did some stuff)
 
 namespace Aethereal
 {
     using namespace Aethereal::Screen;
     using namespace Aethereal::Service;
     using namespace Aethereal::State;
-    using namespace Aethereal::Components;
 
     Aethereal::Aethereal()
     {
@@ -24,9 +26,9 @@ namespace Aethereal
         ServiceLocator::RegisterService(std::make_shared<GameState>());
         ServiceLocator::RegisterService(std::make_shared<ScreenManager>());
         ServiceLocator::RegisterService(std::make_shared<FECS::Registry>());
-        ServiceLocator::RegisterService(std::make_shared<Database>());
 
         // Setup Terminal
+<<<<<<< HEAD
 
         // set the first screen
         ServiceLocator::Get<ScreenManager>()->Overlay(std::make_shared<MainMenu::Menu>());
@@ -46,6 +48,18 @@ namespace Aethereal
 
         // terminal
         Terminal::Open();
+=======
+        TerminalCreateInfo info;
+        info.width = 160;
+        info.height = 50;
+        info.fontSize = 18;
+        info.fontPath = "../resources/font/FixedsysEx.ttf";
+        info.title = "Aethereal";
+        Terminal::Open(info);
+
+        // set the first screen
+        ServiceLocator::Get<ScreenManager>()->Overlay(std::make_shared<MainMenu::Menu>());
+>>>>>>> parent of 4452e5f (did some stuff)
     }
 
     Aethereal::~Aethereal()
