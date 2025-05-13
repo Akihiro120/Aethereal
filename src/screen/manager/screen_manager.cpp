@@ -1,4 +1,5 @@
 #include "screen_manager.h"
+#include "../../terminal/terminal.h"
 
 namespace Aethereal::Screen
 {

@@ -13,24 +13,24 @@ namespace Aethereal::Screen::MainMenu
 
     void Species::Render()
     {
-        Terminal::SetForegroundColor(WHITE);
+        // Terminal::SetForegroundColor(WHITE);
 
         // Option Box
-        Terminal::SetBackgroundColor(GRAY);
-        Box::DrawBox(Box::BoxDimensions{
-            .x = 0,
-            .y = 0,
-            .width = 20,
-            .height = (int) Terminal::GetHeight() - 1});
-
-        Terminal::Print(1, 0, "Select your Species");
-
-        // Description Box
-        Box::DrawBox(Box::BoxDimensions{
-            .x = 21,
-            .y = 0,
-            .width = (int) Terminal::GetWidth() - 22,
-            .height = (int) Terminal::GetHeight() - 1});
+        // Terminal::SetBackgroundColor(GRAY);
+        // Box::DrawBox(Box::BoxDimensions{
+        //     .x = 0,
+        //     .y = 0,
+        //     .width = 20,
+        //     .height = (int) Terminal::GetHeight() - 1});
+        //
+        // Terminal::Print(1, 0, "Select your Species");
+        //
+        // // Description Box
+        // Box::DrawBox(Box::BoxDimensions{
+        //     .x = 21,
+        //     .y = 0,
+        //     .width = (int) Terminal::GetWidth() - 22,
+        //     .height = (int) Terminal::GetHeight() - 1});
     }
 
     void Species::Update()
