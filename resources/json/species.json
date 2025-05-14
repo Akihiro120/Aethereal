@@ -1,18 +1,22 @@
 [
     {
         "name": "Human",
-        "description": "A hairless ape"
+        "description": "A hairless ape",
+        "difficulty": 5
     },
     {
         "name": "Elf",
-        "description": "A pointy ear thing"
+        "description": "A pointy ear thing",
+        "difficulty": 3
     },
     {
         "name": "Drelkin",
-        "description": "human beast hybrid"
+        "description": "human beast hybrid",
+        "difficulty": 3
     },
     {
         "name": "Varnari",
-        "description": "humanoids touched by stars, cult type shit"
+        "description": "humanoids touched by stars, cult type shit",
+        "difficulty": 1
     }
 ]
