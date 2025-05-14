@@ -12,14 +12,28 @@ file (GLOB_RECURSE SOURCES
 	src/*.cpp
 )
 
-find_package(PkgConfig REQUIRED)
+# --- Fetch FTXUI --------------------------------------------------------------
+include(FetchContent)
 
-pkg_check_modules(notcurses REQUIRED IMPORTED_TARGET notcurses)
-pkg_check_modules(notcurses++ REQUIRED IMPORTED_TARGET notcurses++)
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+set(FETCHCONTENT_QUIET OFF)
+
+FetchContent_Declare(ftxui
+  GIT_REPOSITORY https://github.com/arthursonzogni/ftxui.git
+  GIT_TAG        v5.0.0
+  GIT_PROGRESS   TRUE
+  GIT_SHALLOW    TRUE
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(ftxui)
+# ------------------------------------------------------------------------------
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE ftxui::screen
+    PRIVATE ftxui::dom
+    PRIVATE ftxui::component  # Not needed for this example.
+)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${AETHEREAL_VENDOR_DIR})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::notcurses PkgConfig::notcurses++)
-

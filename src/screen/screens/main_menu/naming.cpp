@@ -1,7 +1,7 @@
 #include "naming.h"
-#include "../../../input/input_handler.h"
-#include "../../../components/character/name_component.h"
-#include "../../../components/tags/player_component.h"
+// #include "../../../input/input_handler.h"
+// #include "../../../components/character/name_component.h"
+// #include "../../../components/tags/player_component.h"
 #include "species.h"
 
 namespace Aethereal::Screen::MainMenu
@@ -11,11 +11,7 @@ namespace Aethereal::Screen::MainMenu
     {
     }
 
-    void Naming::Render()
-    {
-    }
-
-    void Naming::Update()
+    ftxui::Component Naming::CreateComponentRoot()
     {
     }
 }

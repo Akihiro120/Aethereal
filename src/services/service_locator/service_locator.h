@@ -33,6 +33,14 @@ namespace Aethereal::Service
             return std::static_pointer_cast<T>(it->second);
         }
 
+        static void Clean()
+        {
+            for (auto& service : Get().m_Services)
+            {
+                service.second.reset();
+            }
+        }
+
     private:
         ServiceLocator() = default;
 

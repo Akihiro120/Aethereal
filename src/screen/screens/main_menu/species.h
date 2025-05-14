@@ -13,8 +13,7 @@ namespace Aethereal::Screen::MainMenu
     public:
         Species();
 
-        virtual void Render() override;
-        virtual void Update() override;
+        virtual ftxui::Component CreateComponentRoot() override;
 
     private:
         ScreenManager& m_ScreenManager;

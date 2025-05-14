@@ -6,10 +6,11 @@
 #include "../screen/screens/main_menu/menu.h"
 #include "state/game_state.h"
 #include <fecs/fecs.h>
+#include <chrono>
+#include <thread>
 #include "../components/tags/player_component.h"
 #include "../components/character/name_component.h"
 #include "../database/database.h"
-#include "../terminal/terminal.h"
 
 namespace Aethereal
 {
@@ -26,10 +27,9 @@ namespace Aethereal
         ServiceLocator::RegisterService(std::make_shared<FECS::Registry>());
         ServiceLocator::RegisterService(std::make_shared<Database>());
 
-        // Setup Terminal
-
         // set the first screen
-        ServiceLocator::Get<ScreenManager>()->Overlay(std::make_shared<MainMenu::Menu>());
+        auto sm = ServiceLocator::Get<ScreenManager>();
+        sm->Replace(std::make_shared<MainMenu::Menu>());
 
         // Setup Database
         auto db = ServiceLocator::Get<Database>();
@@ -43,9 +43,6 @@ namespace Aethereal
         // ecs->GetEntityManager().Reserve(1000);
         ecs->RegisterComponent<Tags::PlayerComponent>();
         ecs->RegisterComponent<Character::NameComponent>();
-
-        // terminal
-        Terminal::Open();
     }
 
     Aethereal::~Aethereal()
@@ -54,35 +51,37 @@ namespace Aethereal
         Clean();
     }
 
+    using namespace std::chrono;
     void Aethereal::Run()
     {
+        auto frameTime = milliseconds(1000 / 60);
+
         // Render loop.
-        while (ServiceLocator::Get<GameState>()->IsGameRunning())
+        while (ServiceLocator::Get<GameState>()->IsGameRunning() && !ServiceLocator::Get<ScreenManager>()->IsClosed())
         {
             // Progress the game's lifecycle.
             Update();
 
             // Render and display components to screen.
             Render();
+
+            std::this_thread::sleep_for(frameTime);
         }
     }
 
     void Aethereal::Render()
     {
-        Terminal::Clear();
-        ServiceLocator::Get<ScreenManager>()->Render();
-        Terminal::Print(0, 0, "Hello, World!!!");
-        Terminal::Refresh();
+        auto sm = ServiceLocator::Get<ScreenManager>();
+        sm->Render();
     }
 
     void Aethereal::Update()
     {
-        Terminal::Poll();
-        ServiceLocator::Get<ScreenManager>()->Update();
     }
 
     void Aethereal::Clean()
     {
-        Terminal::Close();
+        ServiceLocator::Get<ScreenManager>()->Clean();
+        ServiceLocator::Clean();
     }
 }

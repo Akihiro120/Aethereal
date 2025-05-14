@@ -14,8 +14,7 @@ namespace Aethereal::Screen
         public:
             Naming();
 
-            virtual void Render() override;
-            virtual void Update() override;
+            virtual ftxui::Component CreateComponentRoot() override;
 
         private:
             std::string m_Name;
