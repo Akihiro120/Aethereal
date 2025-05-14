@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Talentless",
+        "description": "a",
+        "difficulty": 3
+    },
+    {
+        "name": "Swordsman",
+        "description": "a",
+        "difficulty": 3
+    },
+    {
+        "name": "Marksman",
+        "description": "a",
+        "difficulty": 3
+    },
+    {
+        "name": "Magician",
+        "description": "a",
+        "difficulty": 3
+    }
+]
