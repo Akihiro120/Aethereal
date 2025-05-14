@@ -10,6 +10,9 @@ namespace Aethereal::Screen
                                      m_Container(ftxui::Container::Vertical({})),
                                      m_Loop(&m_InteractiveScreen, m_SceneRootComponent)
     {
+        // Hide the cursor
+        m_InteractiveScreen.SetCursor(ftxui::Screen::Cursor{0, 0, ftxui::Screen::Cursor::Shape::Hidden});
+
         Replace(std::make_shared<Empty>());
     }
 
@@ -24,6 +27,10 @@ namespace Aethereal::Screen
 
         component |= CatchEvent([&](Event event)
         {
+            // Event handling for the screen
+            m_RootComponent->OnEvent(event);
+
+            // exit
             if (event == Event::Character('q'))
             {
                 GetInjection<Aethereal::State::GameState>()->StopRunning();
