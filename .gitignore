@@ -1,22 +1,6 @@
-# Build artifacts
+.cache/
 build/
-
-# vcpkg
-vcpkg_installed
-
-# build scripts
 run
 run.bat
-*.exe
-*.out
-
-# editor/os files
 */.DS_Store
-*.swp
-*~
 .DS_Store
-
-# ide specific
-
-# cache
-.cache/
