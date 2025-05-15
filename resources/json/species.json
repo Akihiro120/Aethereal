@@ -1,22 +1,22 @@
 [
     {
         "name": "Human",
-        "description": "A hairless ape",
+        "description": "You are a human, a being of flesh and blood, with the capacity for greatness and the potential for destruction. You are a blank canvas, waiting to be painted with the colors of your experiences. Your strength lies not in your physical form, but in your ability to adapt, to learn, and to grow. You are a creature of contradictions, capable of both kindness and cruelty, love and hate. You are a reflection of the world around you.",
         "difficulty": 5
     },
     {
         "name": "Elf",
-        "description": "A pointy ear thing",
+        "description": "Graceful and long-lived, elves are attuned to the natural and arcane worlds alike. With keen senses, sharp intellects, and an almost ageless beauty, they often seem aloof to other races. But beneath the calm exterior lies a people bound by ancient duty, fierce pride, and a deep reverence for life and magic.",
         "difficulty": 3
     },
     {
         "name": "Drelkin",
-        "description": "human beast hybrid",
+        "description": "Born of man and beast, the Drelkin are primal hybrids marked by instinct and strength. Their animal ancestry grants them heightened senses, raw physical power, and a relentless will to survive. Often feared or misunderstood, they walk a path between savagery and civilization, torn between impulse and identity.",
         "difficulty": 3
     },
     {
         "name": "Varnari",
-        "description": "humanoids touched by stars, cult type shit",
+        "description": "Touched by the stars and forever changed, the Varnari are enigmatic beings with otherworldly insight. Their eyes shimmer with cosmic knowledge, and their dreams whisper fragments of forgotten truths. Revered by some as prophets and shunned by others as heretics, they walk in mystery, guided by forces beyond mortal comprehension.",
         "difficulty": 1
     }
 ]

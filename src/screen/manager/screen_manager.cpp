@@ -31,13 +31,15 @@ namespace Aethereal::Screen
             m_RootComponent->OnEvent(event);
 
             // exit
-            if (event == Event::Character('q'))
+            if (event == Event::Escape)
             {
                 GetInjection<Aethereal::State::GameState>()->StopRunning();
             }
 
             return false;
         });
+
+        component |= bgcolor(ftxui::Color::Black);
 
         return component;
     }

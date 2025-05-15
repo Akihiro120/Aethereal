@@ -59,7 +59,8 @@ namespace Aethereal::Screen::MainMenu
                                 ftxui::window(ftxui::text("Specification") | ftxui::bold,
                                               ftxui::vbox({ftxui::text(m_Specification.names[m_Selected]),
                                                            ftxui::separator(),
-                                                           ftxui::text(m_Specification.descriptions[m_Selected]),
+                                                           ftxui::paragraph(m_Specification.descriptions[m_Selected]) | size(ftxui::WIDTH, ftxui::EQUAL, 100),
+                                                           ftxui::separatorEmpty(),
                                                            ftxui::text("Difficulty: " + difficulty)}) |
                                                   ftxui::flex)});
         });

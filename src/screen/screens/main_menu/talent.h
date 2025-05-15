@@ -26,6 +26,7 @@ namespace Aethereal::Screen::MainMenu
         {
             std::vector<std::string> names;
             std::vector<std::string> descriptions;
+            std::vector<std::string> flavors;
             std::vector<int> difficulties;
         };
 

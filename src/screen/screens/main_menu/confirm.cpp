@@ -6,6 +6,9 @@
 #include "../../../components/character/name_component.h"
 #include "../../../components/character/species_component.h"
 #include "../../../components/character/talent_component.h"
+#include "../village/village.h"
+
+#include "../../../components/character/stats/general_stat_component.h"
 
 namespace Aethereal::Screen::MainMenu
 {
@@ -40,7 +43,14 @@ namespace Aethereal::Screen::MainMenu
         {
             if (event.is_character())
             {
+                // Attach to player
+                m_Registry->Attach(m_PlayerID, Components::Character::Stats::General::HealthComponent(100));
+                m_Registry->Attach(m_PlayerID, Components::Character::Stats::General::StaminaComponent(100));
+                m_Registry->Attach(m_PlayerID, Components::Character::Stats::General::StrengthComponent(100));
+                m_Registry->Attach(m_PlayerID, Components::Character::Stats::General::DexterityComponent(100));
+
                 // Switch to main game
+                m_ScreenManager->Replace(std::make_shared<Village>());
 
                 return true;
             }

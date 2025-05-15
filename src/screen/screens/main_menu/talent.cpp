@@ -28,6 +28,7 @@ namespace Aethereal::Screen::MainMenu
             m_TalentSpecification.names.push_back(talent.at("name"));
             m_TalentSpecification.descriptions.push_back(talent.at("description"));
             m_TalentSpecification.difficulties.push_back(talent.at("difficulty"));
+            m_TalentSpecification.flavors.push_back(talent.at("flavor"));
         }
 
         auto talentOptions = ftxui::MenuOption{
@@ -51,10 +52,15 @@ namespace Aethereal::Screen::MainMenu
             {
                 difficulty += "\u2605 ";
             }
+
             return hbox({window(text("Select your Talent") | bold, vbox({m_TalentMenu->Render()})) | size(WIDTH, EQUAL, 21),
                          window(text("Talent Specification") | bold, vbox({text(m_TalentSpecification.names[m_Selected]),
                                                                            separator(),
-                                                                           text(m_TalentSpecification.descriptions[m_Selected]), text("Diffculty: " + difficulty)})) |
+                                                                           paragraph(m_TalentSpecification.descriptions[m_Selected]) | size(WIDTH, EQUAL, 100),
+                                                                           separatorEmpty(),
+                                                                           text("Diffculty: " + difficulty),
+                                                                           separatorEmpty(),
+                                                                           paragraph(m_TalentSpecification.flavors[m_Selected]) | size(WIDTH, EQUAL, 100)})) |
                              flex});
         });
     }
