@@ -24,14 +24,8 @@ namespace Aethereal::Screen
         std::shared_ptr<ScreenManager> m_ScreenManager;
 
         ftxui::Component m_VillageOptionMenu;
-        ftxui::Component m_InspectMenu;
-        ftxui::Component m_VillageArmorMenu;
-        ftxui::Component m_VillageWeaponMenu;
-
-        ftxui::Component m_TabWindow;
+        std::vector<std::string> m_VillageOptions;
 
         int m_Selection = 0;
-        int m_Tab = 0;
-        std::vector<std::string> m_VillageOptions;
     };
 }
