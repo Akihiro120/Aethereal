@@ -10,11 +10,11 @@ namespace Aethereal::Screen
 
 namespace Aethereal::Screen
 {
-    class Village : public ScreenBase,
-                    Service::Injector<Village, ScreenManager, FECS::Registry>
+    class Navigation : public ScreenBase,
+                       Service::Injector<Navigation, ScreenManager, FECS::Registry>
     {
     public:
-        Village();
+        Navigation();
 
         virtual ftxui::Component CreateComponentRoot() override;
         virtual ftxui::Component CreateComponentContainer() override;
@@ -23,8 +23,8 @@ namespace Aethereal::Screen
         std::shared_ptr<FECS::Registry> m_Registry;
         std::shared_ptr<ScreenManager> m_ScreenManager;
 
-        ftxui::Component m_VillageOptionMenu;
-        std::vector<std::string> m_VillageOptions;
+        ftxui::Component m_NavigationOptionMenu;
+        std::vector<std::string> m_NavigationOptions;
 
         int m_Selection = 0;
     };

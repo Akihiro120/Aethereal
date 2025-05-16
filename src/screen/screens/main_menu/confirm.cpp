@@ -6,7 +6,7 @@
 #include "../../../components/character/name_component.h"
 #include "../../../components/character/species_component.h"
 #include "../../../components/character/talent_component.h"
-#include "../village/village.h"
+#include "../navigation/navigation.h"
 
 #include "../../../components/character/stats/general_stat_component.h"
 
@@ -50,7 +50,7 @@ namespace Aethereal::Screen::MainMenu
                 m_Registry->Attach(m_PlayerID, Components::Character::Stats::General::DexterityComponent(100));
 
                 // Switch to main game
-                m_ScreenManager->Replace(std::make_shared<Village>());
+                m_ScreenManager->Replace(std::make_shared<Aethereal::Screen::Navigation>());
 
                 return true;
             }
