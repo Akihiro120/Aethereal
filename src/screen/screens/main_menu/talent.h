@@ -30,9 +30,6 @@ namespace Aethereal::Screen::MainMenu
             std::vector<int> difficulties;
         };
 
-        virtual ftxui::Component CreateComponentRoot() override;
-        virtual ftxui::Component CreateComponentContainer() override;
-
     private:
         std::shared_ptr<Aethereal::Screen::ScreenManager> m_ScreenManager;
         std::shared_ptr<Database> m_Database;
@@ -41,7 +38,6 @@ namespace Aethereal::Screen::MainMenu
         FECS::View<Components::Tags::PlayerComponent> m_PlayerView;
 
         int m_Selected = 0;
-        ftxui::Component m_TalentMenu;
         TalentSpecification m_TalentSpecification;
     };
 }

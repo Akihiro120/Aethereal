@@ -16,14 +16,10 @@ namespace Aethereal::Screen
     public:
         Navigation();
 
-        virtual ftxui::Component CreateComponentRoot() override;
-        virtual ftxui::Component CreateComponentContainer() override;
-
     private:
         std::shared_ptr<FECS::Registry> m_Registry;
         std::shared_ptr<ScreenManager> m_ScreenManager;
 
-        ftxui::Component m_NavigationOptionMenu;
         std::vector<std::string> m_NavigationOptions;
 
         int m_Selection = 0;

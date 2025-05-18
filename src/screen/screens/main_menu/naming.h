@@ -14,12 +14,11 @@ namespace Aethereal::Screen
         public:
             Naming();
 
-            virtual ftxui::Component CreateComponentRoot() override;
-            virtual ftxui::Component CreateComponentContainer() override;
+            virtual void Render() override;
+            virtual void Update() override;
 
         private:
             std::string m_Name;
-            ftxui::Component m_NameInput;
 
             std::shared_ptr<ScreenManager> m_ScreenManager;
             std::shared_ptr<FECS::Registry> m_Registry;

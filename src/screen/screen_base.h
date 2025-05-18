@@ -1,7 +1,6 @@
 #pragma once
 #include "screen_interface.h"
-#include <ftxui/component/component.hpp>
-#include <ftxui/dom/deprecated.hpp>
+#include "../terminal/terminal.h"
 
 namespace Aethereal::Screen
 {
@@ -10,42 +9,19 @@ namespace Aethereal::Screen
     public:
         ScreenBase()
         {
-            ConstructSceneRoot();
         }
 
         ~ScreenBase() = default;
 
-        ftxui::Component GetComponentRoot()
+        virtual void Render()
         {
-            return m_Component;
+            Terminal::Print(0, 0, "Not Yet Implemented");
         }
 
-        ftxui::Component GetComponentContainer()
+        virtual void Update()
         {
-            return m_Container;
         }
 
     protected:
-        virtual ftxui::Component CreateComponentRoot()
-        {
-            return ftxui::Renderer([&]
-            {
-                return ftxui::text("Empty Screen") | ftxui::bold;
-            });
-        }
-
-        virtual ftxui::Component CreateComponentContainer()
-        {
-            return ftxui::Container::Vertical({});
-        }
-
-        void ConstructSceneRoot()
-        {
-            m_Component = CreateComponentRoot();
-            m_Container = CreateComponentContainer();
-        }
-
-        ftxui::Component m_Component;
-        ftxui::Component m_Container;
     };
 }

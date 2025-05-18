@@ -17,11 +17,10 @@ namespace Aethereal::Screen
             Menu();
             ~Menu();
 
-            virtual ftxui::Component CreateComponentRoot() override;
-            virtual ftxui::Component CreateComponentContainer() override;
+            virtual void Render() override;
+            virtual void Update() override;
 
         private:
-            ftxui::Component m_OptionsMenu;
             std::vector<std::string> m_Options;
             int m_Selection = 0;
         };

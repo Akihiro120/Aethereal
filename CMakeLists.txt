@@ -12,28 +12,24 @@ file (GLOB_RECURSE SOURCES
 	src/*.cpp
 )
 
-# --- Fetch FTXUI --------------------------------------------------------------
+# --- Fetch RAYLIB --------------------------------------------------------------
 include(FetchContent)
+set(FETCHCONTENT_QUIET FALSE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
+set(BUILD_GAMES    OFF CACHE BOOL "" FORCE) # don't build the supplied example games
 
-set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-set(FETCHCONTENT_QUIET OFF)
-
-FetchContent_Declare(ftxui
-  GIT_REPOSITORY https://github.com/arthursonzogni/ftxui.git
-  GIT_TAG        v5.0.0
-  GIT_PROGRESS   TRUE
-  GIT_SHALLOW    TRUE
-  EXCLUDE_FROM_ALL
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY "https://github.com/raysan5/raylib.git"
+    GIT_TAG "master"
+    GIT_PROGRESS TRUE
 )
-FetchContent_MakeAvailable(ftxui)
+
+FetchContent_MakeAvailable(raylib)
 # ------------------------------------------------------------------------------
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE ftxui::screen
-    PRIVATE ftxui::dom
-    PRIVATE ftxui::component  # Not needed for this example.
-)
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${AETHEREAL_VENDOR_DIR})

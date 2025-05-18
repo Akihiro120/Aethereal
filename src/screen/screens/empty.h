@@ -7,7 +7,5 @@ namespace Aethereal::Screen
     {
     public:
         Empty();
-
-        virtual ftxui::Component CreateComponentRoot() override;
     };
 }

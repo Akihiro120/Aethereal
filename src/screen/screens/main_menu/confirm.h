@@ -17,9 +17,6 @@ namespace Aethereal::Screen::MainMenu
     public:
         Confirm();
 
-        virtual ftxui::Component CreateComponentRoot() override;
-        virtual ftxui::Component CreateComponentContainer() override;
-
     private:
         std::shared_ptr<FECS::Registry> m_Registry;
         std::shared_ptr<Aethereal::Screen::ScreenManager> m_ScreenManager;

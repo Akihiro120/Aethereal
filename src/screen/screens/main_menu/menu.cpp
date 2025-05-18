@@ -1,8 +1,7 @@
 #include "menu.h"
 #include "naming.h"
-#include <ftxui/component/component.hpp>
-
-using namespace ftxui;
+#include <raylib.h>
+#include <raymath.h>
 
 namespace Aethereal::Screen
 {
@@ -15,40 +14,50 @@ namespace Aethereal::Screen
                          "Options",
                          "Exit"})
         {
-            ScreenBase::ConstructSceneRoot();
         }
 
         Menu::~Menu()
         {
         }
 
-        ftxui::Component Menu::CreateComponentRoot()
+        void Menu::Render()
         {
-            MenuOption options = {
-                .on_enter = [this]
-            {
-                if (m_Selection == 0)
-                {
-                    GetInjection<ScreenManager>()->Replace(std::make_shared<Naming>());
-                }
-                if (m_Selection == 3)
-                {
-                    GetInjection<State::GameState>()->StopRunning();
-                }
-            },
-            };
-            m_OptionsMenu = ftxui::Menu(&m_Options, &m_Selection, options);
+            Terminal::SetForegroundColor(WHITE);
+            Terminal::DrawBox(0, 0, Terminal::Width(), Terminal::Height(), Terminal::BoxStyle::LIGHT);
+            Terminal::Print(1, 0, "Aethereal");
 
-            return ftxui::Renderer(m_OptionsMenu, [&]()
+            for (int i = 0; i < m_Options.size(); i++)
             {
-                return vbox({ftxui::text("Aethereal") | bold,
-                             m_OptionsMenu->Render()});
-            });
+                Color optionColor = WHITE;
+                std::string prefix = "";
+                if (i == m_Selection)
+                {
+                    prefix = "> ";
+                    optionColor = YELLOW;
+                }
+                Terminal::SetForegroundColor(optionColor);
+                Terminal::Print(1, 1 + i, prefix + m_Options[i]);
+
+                Terminal::SetForegroundColor(WHITE);
+            }
         }
 
-        ftxui::Component Menu::CreateComponentContainer()
+        void Menu::Update()
         {
-            return m_OptionsMenu; // ftxui::Container::Vertical({m_OptionsMenu});
+            if (IsKeyPressed(KEY_K))
+            {
+                m_Selection = Clamp(m_Selection - 1, 0, m_Options.size() - 1);
+            }
+
+            if (IsKeyPressed(KEY_J))
+            {
+                m_Selection = Clamp(m_Selection + 1, 0, m_Options.size() - 1);
+            }
+
+            if (IsKeyPressed(KEY_ENTER))
+            {
+                GetInjection<ScreenManager>()->Replace(std::make_shared<Naming>());
+            }
         }
     }
 }
