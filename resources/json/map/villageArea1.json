@@ -1,0 +1,41 @@
+[
+    {
+        "ID": "weaponShop1",
+        "statics": [
+
+        ],
+        "interactables": [
+            {
+                "ID": "weaponShop1"
+                "tags": [
+                    "name",
+                    "shop",
+                    "dialogue"
+                ],
+                "name": "Bob",
+                "shop": [
+                    {
+                        "itemID": "gunCommon1",
+                        "price": 500,
+                    }
+                ],
+                "dialogueID": "bobWeaponShopDialogue" 
+            }
+        ]
+    },
+    {
+        "ID": "armorShop1",
+        "statics": [
+
+        ],
+        "interactables": [
+            {
+                "ID": "armorShop1",
+                "tags": [
+                    "name"
+                ],
+                "name": "James" 
+            }
+        ]
+    }
+]

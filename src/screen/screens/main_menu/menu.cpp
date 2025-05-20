@@ -56,7 +56,11 @@ namespace Aethereal::Screen
 
             if (IsKeyPressed(KEY_ENTER))
             {
-                GetInjection<ScreenManager>()->Replace(std::make_shared<Naming>());
+                if (m_Selection == 0)
+                    GetInjection<ScreenManager>()->Replace(std::make_shared<Naming>());
+
+                if (m_Selection == 3)
+                    GetInjection<State::GameState>()->StopRunning();
             }
         }
     }

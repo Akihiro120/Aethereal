@@ -23,12 +23,8 @@ namespace Aethereal::Screen::MainMenu
     public:
         Species();
 
-        struct SpeciesMenuSpecification
-        {
-            std::vector<std::string> names;
-            std::vector<std::string> descriptions;
-            std::vector<int> difficulty;
-        };
+        virtual void Render() override;
+        virtual void Update() override;
 
     private:
         std::shared_ptr<ScreenManager> m_ScreenManager;
@@ -36,8 +32,6 @@ namespace Aethereal::Screen::MainMenu
         std::shared_ptr<Database> m_Database;
 
         int m_Selected = 0;
-        SpeciesMenuSpecification m_Specification;
-
         FECS::View<Components::Tags::PlayerComponent> m_PlayerView;
     };
 }

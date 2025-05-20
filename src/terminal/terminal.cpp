@@ -48,6 +48,7 @@ namespace Aethereal
         s_Rows = config.rows;
         s_FontPath = config.fontPath;
 
+        SetConfigFlags(FLAG_WINDOW_HIGHDPI);
         InitWindow(s_WindowWidth, s_WindowHeight, "Aethereal");
         SetTargetFPS(60);
 
@@ -151,6 +152,10 @@ namespace Aethereal
         BeginDrawing();
         ClearBackground(BLACK);
 
+        Vector2 dpi = GetWindowScaleDPI();
+        float dpiscale = std::max(dpi.x, dpi.y);
+        float invScale = 1.0f / dpiscale;
+
         for (int y = 0; y < s_Rows; ++y)
         {
             for (int x = 0; x < s_Columns; ++x)
@@ -173,14 +178,14 @@ namespace Aethereal
 
                 const GlyphMetrics& m = it->second;
 
-                float penX = cellX + (s_CellWidth - m.advanceX) * 0.5f;
+                float penX = cellX + (s_CellWidth - m.advanceX * invScale) * 0.5f;
                 float penY = cellY + s_BaselineOffset;
 
                 Rectangle dest = {
-                    penX + m.offset.x,
-                    penY + m.offset.y,
-                    m.size.x,
-                    m.size.y};
+                    penX + m.offset.x * invScale,
+                    penY + m.offset.y * invScale,
+                    m.size.x * invScale,
+                    m.size.y * invScale};
 
                 DrawTexturePro(s_Atlas, m.srcRect, dest, {0, 0}, 0.0f, cell.fg);
             }
@@ -208,7 +213,10 @@ namespace Aethereal
             Utility::Logging::LOG("Rebuilt Codepoints");
         }
 
-        s_Font = LoadFontEx(fontPath.c_str(), s_FontSize, s_Codepoints.data(), s_Codepoints.size());
+        Vector2 dpi = GetWindowScaleDPI();
+        float dpiScale = std::max(dpi.x, dpi.y);
+        s_Font = LoadFontEx(fontPath.c_str(), std::ceil(s_FontSize * dpiScale), s_Codepoints.data(), s_Codepoints.size());
+        SetTextureFilter(s_Font.texture, TEXTURE_FILTER_POINT);
         s_Atlas = s_Font.texture;
 
         s_GlyphCache.clear();
@@ -235,9 +243,9 @@ namespace Aethereal
 
         if (s_NewCodepoints.empty() && !s_Built)
         {
-            s_CellWidth = (int) std::ceil(maxAdvance);
-            s_CellHeight = (int) std::ceil(maxAscent + maxDescent);
-            s_BaselineOffset = std::ceil(maxAscent);
+            s_CellWidth = (int) std::ceil(maxAdvance / dpiScale);
+            s_CellHeight = (int) std::ceil((maxAscent + maxDescent) / dpiScale);
+            s_BaselineOffset = std::ceil(maxAscent / dpiScale);
             Utility::Logging::LOG("Rebuilt Cell Dimensions");
             s_Built = true;
         }

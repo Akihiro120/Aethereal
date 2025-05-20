@@ -35,8 +35,15 @@ namespace Aethereal::Screen::MainMenu
     {
         Aethereal::Input::GetKeyboardInput(&m_Name);
 
-        if (IsKeyPressed(KEY_ENTER))
+        if (IsKeyPressed(KEY_ENTER) && !m_Name.empty())
         {
+
+            // Attach name component to player entity
+            FECS::Entity player = m_Registry->CreateEntity();
+            m_Registry->Attach(player, Components::Tags::PlayerComponent{});
+            m_Registry->Attach(player, Components::Character::NameComponent{.name = m_Name});
+
+            // Replace screen
             m_ScreenManager->Replace(std::make_shared<Species>());
         }
     }

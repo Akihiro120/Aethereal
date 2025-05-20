@@ -56,8 +56,8 @@ namespace Aethereal
     void Aethereal::InitialTerminal()
     {
         Terminal::Open(Terminal::TerminalConfig{
-            .windowWidth = 1920,
-            .windowHeight = 1080,
+            .windowWidth = 1280,
+            .windowHeight = 720,
             .columns = 160,
             .rows = 50,
             .fontPath = "../resources/font/CascadiaCove.ttf",
