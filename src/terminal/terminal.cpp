@@ -3,6 +3,7 @@
 #include "../data/enums/unicodes.h"
 #include "raylib.h"
 #include <algorithm>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
 #include <iostream>
@@ -18,6 +19,7 @@ namespace Aethereal
     static int s_CellWidth = 0;
     static int s_CellHeight = 0;
     static float s_FontSize = 0.0f;
+    static bool s_UseDPIScaling = false;
 
     static Color s_BackgroundColor = BLACK;
     static Color s_ForegroundColor = WHITE;
@@ -48,7 +50,9 @@ namespace Aethereal
         s_Rows = config.rows;
         s_FontPath = config.fontPath;
 
-        SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+        if (s_UseDPIScaling)
+            SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+
         InitWindow(s_WindowWidth, s_WindowHeight, "Aethereal");
         SetTargetFPS(60);
 
@@ -96,9 +100,22 @@ namespace Aethereal
     // Print a string starting at (x, y)
     void Terminal::Print(int x, int y, const std::string& str)
     {
-        for (size_t i = 0; i < str.size(); ++i)
+        int cx = x;
+        const char* text = str.c_str();
+        int length = (int) str.size();
+        int offset = 0;
+
+        while (offset < length)
         {
-            Put(x + static_cast<int>(i), y, (int) str[i]);
+            int bytesConsumed = 0;
+            int codepoint = GetCodepoint(text + offset, &bytesConsumed);
+
+            // safety guard against malformed UTF-8
+            if (bytesConsumed <= 0)
+                break;
+
+            Put(cx++, y, codepoint);
+            offset += bytesConsumed;
         }
     }
 
@@ -152,7 +169,7 @@ namespace Aethereal
         BeginDrawing();
         ClearBackground(BLACK);
 
-        Vector2 dpi = GetWindowScaleDPI();
+        Vector2 dpi = s_UseDPIScaling ? GetWindowScaleDPI() : Vector2{1.0f, 1.0f};
         float dpiscale = std::max(dpi.x, dpi.y);
         float invScale = 1.0f / dpiscale;
 
@@ -209,11 +226,15 @@ namespace Aethereal
     {
         for (int cp : s_NewCodepoints)
         {
-            s_Codepoints.push_back(cp);
-            Utility::Logging::LOG("Rebuilt Codepoints");
+            if (std::find(s_Codepoints.begin(), s_Codepoints.end(), cp) == s_Codepoints.end())
+            {
+                s_Codepoints.push_back(cp);
+                // Utility::Logging::LOG("Added codepoint " + std::hex + cp + std::to_string(cp));
+                std::cout << "Loading CP: " << std::hex << cp << std::dec << " (" << cp << ")" << std::endl;
+            }
         }
 
-        Vector2 dpi = GetWindowScaleDPI();
+        Vector2 dpi = s_UseDPIScaling ? GetWindowScaleDPI() : Vector2{1.0f, 1.0f};
         float dpiScale = std::max(dpi.x, dpi.y);
         s_Font = LoadFontEx(fontPath.c_str(), std::ceil(s_FontSize * dpiScale), s_Codepoints.data(), s_Codepoints.size());
         SetTextureFilter(s_Font.texture, TEXTURE_FILTER_POINT);
@@ -292,5 +313,35 @@ namespace Aethereal
         Terminal::Put(x + width, y, topRight);
         Terminal::Put(x, y + height, bottomLeft);
         Terminal::Put(x + width, y + height, bottomRight);
+    }
+
+    Terminal::TextWrap Terminal::WrapText(const std::string& s, int wrapSize)
+    {
+        std::istringstream iss(s);
+        std::string word, line;
+        TextWrap wrap;
+
+        while (iss >> word)
+        {
+            if (line.size() + word.size() + (line.empty() ? 0 : 1) > wrapSize)
+            {
+                wrap.lines.push_back(line);
+                line.clear();
+            }
+
+            if (!line.empty())
+            {
+                line += ' ';
+            }
+            line += word;
+        }
+
+        if (!line.empty())
+        {
+            wrap.lines.push_back(line);
+        }
+        wrap.num = wrap.lines.size();
+
+        return wrap;
     }
 } // namespace Aethereal

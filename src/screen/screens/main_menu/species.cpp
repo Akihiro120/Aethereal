@@ -46,6 +46,7 @@ namespace Aethereal::Screen::MainMenu
         // Print specification
         std::string speciesName = speciesList[m_Selected].at("name").get<std::string>();
         std::string speciesDesc = speciesList[m_Selected].at("description").get<std::string>();
+        auto wrappedDesc = Terminal::WrapText(speciesDesc, 80);
         int difficultyRate = speciesList[m_Selected].at("difficulty").get<int>();
 
         Terminal::SetForegroundColor(WHITE);
@@ -53,12 +54,16 @@ namespace Aethereal::Screen::MainMenu
         std::string difficulty = "";
         for (int i = 0; i < difficultyRate; i++)
         {
-            difficulty += "⏺ ";
+            difficulty += "\u2605";
         }
 
         Terminal::Print(27, 1, speciesName);
         Terminal::Print(27, 2, "Difficulty: " + difficulty);
-        Terminal::Print(27, 4, speciesDesc);
+
+        for (int i = 0; i < wrappedDesc.num; i++)
+        {
+            Terminal::Print(27, 4 + i, wrappedDesc.lines[i]);
+        }
     }
 
     void Species::Update()

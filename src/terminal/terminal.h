@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <raylib.h>
+#include <vector>
 
 namespace Aethereal
 {
@@ -45,6 +46,13 @@ namespace Aethereal
 
         static int Width();
         static int Height();
+
+        struct TextWrap
+        {
+            std::vector<std::string> lines;
+            int num;
+        };
+        static TextWrap WrapText(const std::string& str, int wrap);
 
         enum class BoxStyle
         {
