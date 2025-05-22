@@ -1,26 +1,172 @@
 [
     {
         "name": "Talentless",
-        "description": "You are a blank slate, a remarkable soul in a world brimming with extraordinary abilities. While others are born with gifts, you are forged in the fires of adversity. Your lack of talent is not a weakness-it is your greatest strength. You are free from the chains of expectation, and in your ordinariness lies infinite potential. The world may dismiss you, but you will prove that even the talentless can rise to greatness.",
-        "flavor": "They called you talentless, but they forgot one thing: the greatest stories are not about those born with power, but those who seize it.",
-        "difficulty": 5
+        "description": "A blank canvas in a world of prodigies. Your lack of birthright gifts births true freedom: you carve your own path and prove that willpower outshines natural talent.",
+        "flavor": "They wrote you off as worthless—now watch them eat their words as you rise.",
+        "difficulty": 5,
+        "strengths": [
+            {
+                "name": "Prism of Potential",
+                "description": "Once per level, gain +5 to any secondary stat of your choice."
+            },
+            {
+                "name": "Accelerated Vitals",
+                "description": "+10 regen per second to, health, stamina, and mana out of combat."
+            },
+            {
+                "name": "Cooldown Reduction",
+                "description": "-5% to all skill cooldown timers."
+            },
+            {
+                "name": "Gear Amplification",
+                "description": "Every equipped item grants +1% to its primary stat."
+            },
+            {
+                "name": "Unpredictable Dodge",
+                "description": "Dodge window increased by 0.02 per point of Dexterity. Succesful dodge recovers lost stamina."
+            }
+        ],
+        "weaknesses": [
+            {
+                "name": "Mortal Frame",
+                "description": "Base health, stamina, dexterity: -10% below class average."
+            },
+            {
+                "name": "Latent Awakening",
+                "description": "Class specific abilities unlock two skill-tree tiers later than other classes."
+            },
+            {
+                "name": "Weak Resistances",
+                "description": "-5 to physical, magic, and chemical resistance."
+            },
+            {
+                "name": "Hallow Core",
+                "description": "No built in abilities, relying on skill-tree and gear."
+            }
+        ]
     },
     {
         "name": "Swordsman",
-        "description": "The blade sings in your hands, a symphony of steel and fury. You are the storm that is approaching, a whirlwind of precision and power. Every swing of your sword tells a story-of battles won, of honor upheld, of lives defended. You are not just a warrior; you are a legend in the making. The weight of your weapon is nothing compared to the weight of your resolve.",
-        "flavor": "When the sword is drawn, the world holds its breath. You are the edge between victory and defeat, every swing carries the hopes of those who cannot fight, and every strike is a promise to protect what matters most.",
-        "difficulty": 2
+        "description": "The storm that is approaching, steel in hand. Every strike is an aria of honor and might—your legacy forged in clashing blades.",
+        "flavor": "When your sword sings, hope and fear ride its notes.",
+        "difficulty": 2,
+        "strengths": [
+            {
+                "name": "Constitution Surge",
+                "description": "+15% base health, +10% base stamina."
+            },
+            {
+                "name": "Armor Mastery",
+                "description": "+5 physical resistance per armor tier."
+            },
+            {
+                "name": "Stamina Efficiency",
+                "description": "-10% stamina cost on attacks; +15% stamina regen out of combat."
+            },
+            {
+                "name": "Rend and Return",
+                "description": "On a perfect parry, trigger a riposte reflecting the attack back onto the enemy."
+            },
+            {
+                "name": "Global Interval Intervention",
+                "description": "Every heavy skill used delays the enemy next interval timer by +0.5s."
+            }
+        ],
+        "weaknesses": [
+            {
+                "name": "Zero Mana",
+                "description": "Begin with 0 in all magical status."
+            },
+            {
+                "name": "Sluggish Mobility",
+                "description": "-15% dexterity"
+            },
+            {
+                "name": "Chemical Vulnerability",
+                "description": "-10 chemical resistance."
+            }
+        ]
     },
     {
         "name": "Marksman",
-        "description": "You are the shadows in the trees, the whisper of death on the wind. Your prowess pierces your enemies before they even know you're there. Every shot is a note in a deadly melody. You are the unseen guardian, the silent sentinel, and when you strike, it is with the precision of a predator.",
-        "flavor": "The arrow does not choose its target-it is the archer's will that guides it, and your will is unbreakable. The first shot you make will carry the weight of the world",
-        "difficulty": 3
+        "description": "A phantom in the foliage. Your arrows whisper death before it arrives—silent, precise, inevitable.",
+        "flavor": "They never hear you coming; they only feel the end.",
+        "difficulty": 3,
+
+        "strengths": [
+            {
+                "name": "Hawkeye Precision",
+                "description": "+20% crit chance, successful crits restore 1 ammo."
+            },
+            {
+                "name": "Ammo Conservation",
+                "description": "10% chance to not consume ammo. +50% ammo limit."
+            },
+            {
+                "name": "Stillness of the Hunt",
+                "description": "After 4 seconds out of combat. Next shot deals 30% more damage, and is a guarantreed crit."
+            },
+            {
+                "name": "Trapcraft",
+                "description": "+15% detect/disarm chance; can deplay snares that delay enemy timers on trigger."
+            },
+            {
+                "name": "Wind Compensation",
+                "description": "In windy areas, the eyesight penalty is reduced by 50%."
+            }
+        ],
+        "weaknesses": [
+            {
+                "name": "Glass Cannon",
+                "description": "-20% base health, -5 physical resistance."
+            },
+            {
+                "name": "Drained Endurance",
+                "description": "Stamina pool at 80% of average."
+            },
+            {
+                "name": "Cursed Proximity",
+                "description": "-50% damage within 2m of target."
+            }
+        ]
     },
     {
         "name": "Magician",
-        "description": "You are the weaver of wonders, a master of the arcane. The elements bow to your command, and the fabric of reality bends to your will. Fire dances at your fingertips, ice crystrallizes in your breaths, and lightning crackles in your veins. You are a unit of absolute intellegence calculating every spell in a split second. You will become a force of nature. But beware, for the power you wield is as dangerous as it is beautiful.",
-        "flavor": "Magic is not a gift, but a pact. You dance with fire, forces beyond mortal comprehension. Even though every spell you cast is an offering to the void, you wield it anyway, because the world needs light, even if it costs you everything",
-        "difficulty": 5
+        "description": "Weaver of the impossible, you bend reality’s threads. Your spells are symphonies of arcane power—beautiful, lethal, unstoppable.",
+        "flavor": "With every incantation, you pay the void’s price—but the world demands your sacrifice.",
+        "difficulty": 5,
+
+        "strengths": [
+            {
+                "name": "Leyline Convergence",
+                "description": "Every 5 spells casted, next spell deals 20% bonus damage."
+            },
+            {
+                "name": "Spellwrights Efficiency",
+                "description": "-18% mana cost on all spells, each cast returns 5% of max mana."
+            },
+            {
+                "name": "Celestial Ward",
+                "description": "Have a protective shield, absorbs damange equal to 12% of current mana, perfect dodges will reduce cooldowns, and restore mana."
+            },
+            {
+                "name": "Spellforge Infinity",
+                "description": "8% of all damage you deal is stored. At 100% your next spell is cast instantly, and deals 50% bonus damage."
+            }
+        ],
+        "weaknesses": [
+            {
+                "name": "Glass Conduit",
+                "description": "-30% base health, -12% physical resistance. Heavy hits reduce mana."
+            },
+            {
+                "name": "Weave Lock",
+                "description": "Every spell locks your movement, interrupted casters take +60% damage."
+            },
+            {
+                "name": "Mana Thirst",
+                "description": "Magic debuffs are 40% more effective on you."
+            }
+        ]
     }
 ]

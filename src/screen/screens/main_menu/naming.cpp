@@ -2,6 +2,7 @@
 #include "../../../components/character/name_component.h"
 #include "../../../components/tags/player_component.h"
 #include "../../../input/input_handler.h"
+#include "../../../data/ids.h"
 #include "species.h"
 
 namespace Aethereal::Screen::MainMenu
@@ -42,6 +43,8 @@ namespace Aethereal::Screen::MainMenu
             FECS::Entity player = m_Registry->CreateEntity();
             m_Registry->Attach(player, Components::Tags::PlayerComponent{});
             m_Registry->Attach(player, Components::Character::NameComponent{.name = m_Name});
+
+            ID::SetPlayerID(player);
 
             // Replace screen
             m_ScreenManager->Replace(std::make_shared<Species>());

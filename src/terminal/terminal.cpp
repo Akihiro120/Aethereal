@@ -19,7 +19,7 @@ namespace Aethereal
     static int s_CellWidth = 0;
     static int s_CellHeight = 0;
     static float s_FontSize = 0.0f;
-    static bool s_UseDPIScaling = true;
+    static bool s_UseDPIScaling = false;
 
     static Color s_BackgroundColor = BLACK;
     static Color s_ForegroundColor = WHITE;
