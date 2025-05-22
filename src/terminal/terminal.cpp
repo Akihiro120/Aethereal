@@ -19,7 +19,7 @@ namespace Aethereal
     static int s_CellWidth = 0;
     static int s_CellHeight = 0;
     static float s_FontSize = 0.0f;
-    static bool s_UseDPIScaling = false;
+    static bool s_UseDPIScaling = true;
 
     static Color s_BackgroundColor = BLACK;
     static Color s_ForegroundColor = WHITE;
@@ -53,6 +53,7 @@ namespace Aethereal
         if (s_UseDPIScaling)
             SetConfigFlags(FLAG_WINDOW_HIGHDPI);
 
+        SetTraceLogLevel(TraceLogLevel::LOG_NONE);
         InitWindow(s_WindowWidth, s_WindowHeight, "Aethereal");
         SetTargetFPS(60);
 
@@ -67,6 +68,7 @@ namespace Aethereal
         {
             s_Codepoints.push_back(i);
         }
+        // s_Codepoints.push_back(0x20);
 
         LoadFont(s_FontPath);
 
@@ -229,8 +231,7 @@ namespace Aethereal
             if (std::find(s_Codepoints.begin(), s_Codepoints.end(), cp) == s_Codepoints.end())
             {
                 s_Codepoints.push_back(cp);
-                // Utility::Logging::LOG("Added codepoint " + std::hex + cp + std::to_string(cp));
-                std::cout << "Loading CP: " << std::hex << cp << std::dec << " (" << cp << ")" << std::endl;
+                Utility::Logging::LOG("Added codepoint " + std::to_string(cp));
             }
         }
 

@@ -22,13 +22,8 @@ namespace Aethereal::Screen::MainMenu
     public:
         Talent();
 
-        struct TalentSpecification
-        {
-            std::vector<std::string> names;
-            std::vector<std::string> descriptions;
-            std::vector<std::string> flavors;
-            std::vector<int> difficulties;
-        };
+        virtual void Render() override;
+        virtual void Update() override;
 
     private:
         std::shared_ptr<Aethereal::Screen::ScreenManager> m_ScreenManager;
@@ -38,6 +33,5 @@ namespace Aethereal::Screen::MainMenu
         FECS::View<Components::Tags::PlayerComponent> m_PlayerView;
 
         int m_Selected = 0;
-        TalentSpecification m_TalentSpecification;
     };
 }

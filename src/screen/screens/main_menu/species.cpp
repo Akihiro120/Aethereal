@@ -54,7 +54,7 @@ namespace Aethereal::Screen::MainMenu
         std::string difficulty = "";
         for (int i = 0; i < difficultyRate; i++)
         {
-            difficulty += "\u2605";
+            difficulty += "* ";
         }
 
         Terminal::Print(27, 1, speciesName);
