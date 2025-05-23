@@ -16,6 +16,9 @@ namespace Aethereal::Screen
     public:
         Navigation();
 
+        virtual void Render() override;
+        virtual void Update() override;
+
     private:
         std::shared_ptr<FECS::Registry> m_Registry;
         std::shared_ptr<ScreenManager> m_ScreenManager;

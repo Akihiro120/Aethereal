@@ -1,0 +1,8 @@
+{
+    "id": "square",
+    "description": "The bustling village square, with cobbled paths and a well in the center.",
+    "exits": {
+        "west": "forest.clearing",
+        "north": "inn"
+    }
+}
