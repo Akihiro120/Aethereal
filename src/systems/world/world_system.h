@@ -21,6 +21,12 @@ namespace Aethereal::Systems
         std::unordered_map<ZoneID, ZoneData> zones;
     };
 
+    struct AreaZoneRef
+    {
+        std::string area;
+        std::string zone;
+    };
+
     class WorldSystem
     {
     public:
@@ -33,7 +39,7 @@ namespace Aethereal::Systems
         const std::string CurrentAreaDescription();
 
     private:
-        void ParseArea(const std::string& areaID);
+        AreaZoneRef ParseArea(const std::string& input, const std::string& currentArea);
 
         std::string m_CurrentArea = "";
         std::unordered_map<std::string, AreaData> m_Areas;
