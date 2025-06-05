@@ -4,5 +4,6 @@
     "exits": {
         "west": "forest.clearing",
         "north": "inn"
-    }
+    },
+    "actors": []
 }

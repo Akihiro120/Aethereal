@@ -1,7 +1,6 @@
-
 {
     "id": "clearing",
-    "description": "A sunlit clearing surrounded by tall, luscious trees.".
+    "description": "A sunlit clearing surrounded by tall, luscious trees.",
     "exits": {
         "north": "deepForest",
         "east": "village.square"

@@ -8,8 +8,7 @@ namespace Aethereal::Screen
                                m_NavigationOptions({"North", "South", "East", "West"})
     {
         // load areas
-        m_WorldSystem.LoadAreas("json/world/forest");
-        m_WorldSystem.LoadAreas("json/world/village");
+        m_WorldSystem.LoadAreas("json/areas");
     }
 
     void Navigation::Render()

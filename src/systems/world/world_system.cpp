@@ -21,7 +21,15 @@ namespace Aethereal::Systems
 
     void WorldSystem::LoadAreas(const std::string& directory)
     {
-        for (const auto& areaDir : fs::directory_iterator(directory))
+        fs::path basePath = fs::path("../resources") / directory;
+
+        if (!fs::exists(basePath))
+        {
+            Utility::Logging::LOG("Directory does not exist: " + basePath.string());
+            return;
+        }
+
+        for (const auto& areaDir : fs::directory_iterator(basePath))
         {
             if (!areaDir.is_directory())
                 continue;
@@ -59,11 +67,11 @@ namespace Aethereal::Systems
                     Enums::Direction dir;
                     if (key == "north")
                         dir = Enums::Direction::NORTH;
-                    if (key == "south")
+                    else if (key == "south")
                         dir = Enums::Direction::SOUTH;
-                    if (key == "west")
+                    else if (key == "west")
                         dir = Enums::Direction::WEST;
-                    if (key == "east")
+                    else if (key == "east")
                         dir = Enums::Direction::EAST;
 
                     zone.exits[dir] = val;
