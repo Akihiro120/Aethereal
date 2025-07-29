@@ -1,13 +1,18 @@
 #include "game.h"
 #include <raylib.h>
 #include "../ecs/system/core/engineSystem.h"
+#include "../ecs/system/rendering/renderSystem.h"
 
 namespace Aethereal
 {
     Game::Game()
     {
+        // Systems
         m_SystemManager
-            .AttachSystem<ECS::Systems::Core::EngineSystem>();
+            .AttachSystem<ECS::Systems::Core::EngineSystem>()
+            .AttachSystem<ECS::Systems::Render::RenderSystem>();
+
+        // Components
     }
 
     Game::~Game()

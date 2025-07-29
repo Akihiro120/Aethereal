@@ -1,5 +1,6 @@
 #include "engineSystem.h"
 #include <raylib.h>
+#include "../../../terminal/terminal.h"
 
 namespace Aethereal::ECS::Systems::Core
 {

@@ -1,11 +1,7 @@
 #pragma once
 #include <fecs/fecs.h>
 
-namespace Aethereal
+namespace Aethereal::ECS
 {
-    class ECS
-    {
-    public:
-        inline static FECS::Registry Registry = {};
-    };
+    inline static FECS::Registry Registry = {};
 }

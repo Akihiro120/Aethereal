@@ -8,96 +8,55 @@
 
 namespace Aethereal
 {
-
-    // Terminal state variables
-    static int s_WindowWidth = 0;
-    static int s_WindowHeight = 0;
-    static int s_Columns = 0;
-    static int s_Rows = 0;
-    static int s_CellWidth = 0;
-    static int s_CellHeight = 0;
-    static float s_FontSize = 0.0f;
-    static bool s_UseDPIScaling = true;
-
-    static Color s_BackgroundColor = BLACK;
-    static Color s_ForegroundColor = WHITE;
-
-    static Font s_Font;
-    static Texture2D s_Atlas;
-    static std::string s_FontPath;
-    static std::vector<int> s_Codepoints;
-    static std::vector<int> s_NewCodepoints;
-    static std::vector<Terminal::Cell> s_Cells;
-    static std::unordered_map<int, Terminal::GlyphMetrics> s_GlyphCache;
-    static std::unordered_map<int, int> s_CodepointToIndex;
-    static float s_BaselineOffset = 0.0f;
-    static bool s_Built = false;
-
-    // Internal utility
-    inline int Terminal::GetIndex(int x, int y)
+    // Config::Builder implementation (outside the struct to avoid incomplete type issues)
+    int Terminal::GetIndex(int x, int y) const
     {
-        return y * s_Columns + x;
+        return y * m_Columns + x;
     }
 
-    // Terminal initialization
-    void Terminal::Open(const TerminalConfig& config)
+    void Terminal::Open(const Config& config)
     {
-        s_WindowWidth = config.windowWidth;
-        s_WindowHeight = config.windowHeight;
-        s_Columns = config.columns;
-        s_Rows = config.rows;
-        s_FontPath = config.fontPath;
+        m_WindowWidth = config.windowWidth;
+        m_WindowHeight = config.windowHeight;
+        m_Columns = config.columns;
+        m_Rows = config.rows;
+        m_FontPath = config.fontPath;
 
-        if (s_UseDPIScaling)
-            SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+        int fontSizeX = m_WindowWidth / m_Columns;
+        int fontSizeY = m_WindowHeight / m_Rows;
+        m_FontSize = std::min(fontSizeX, fontSizeY);
 
-        SetTraceLogLevel(TraceLogLevel::LOG_NONE);
-        InitWindow(s_WindowWidth, s_WindowHeight, "Aethereal");
-        SetTargetFPS(60);
-
-        // Estimate an initial font size to fill the window
-        int fontSizeX = s_WindowWidth / s_Columns;
-        int fontSizeY = s_WindowHeight / s_Rows;
-        s_FontSize = std::min(fontSizeX, fontSizeY);
-
-        // Preload ASCII characters
-        s_Codepoints.clear();
+        m_Codepoints.clear();
         for (int i = 0; i < 127; ++i)
         {
-            s_Codepoints.push_back(i);
+            m_Codepoints.push_back(i);
         }
-        // s_Codepoints.push_back(0x20);
 
-        LoadFont(s_FontPath);
+        LoadFont(m_FontPath);
 
-        // Adjust font size to fit window exactly
-        float scaleX = (float) s_WindowWidth / (s_CellWidth * s_Columns);
-        float scaleY = (float) s_WindowHeight / (s_CellHeight * s_Rows);
+        float scaleX = (float) m_WindowWidth / (m_CellWidth * m_Columns);
+        float scaleY = (float) m_WindowHeight / (m_CellHeight * m_Rows);
         float scale = std::min(scaleX, scaleY);
-        s_FontSize = std::max(1, (int) std::floor(s_FontSize * scale));
+        m_FontSize = std::max(1, (int) std::floor(m_FontSize * scale));
 
-        s_Built = false;
-        LoadFont(s_FontPath); // Reload to apply scale
+        m_Built = false;
+        LoadFont(m_FontPath); // Rebuild with scaled font size
 
-        // Resize window to match exact terminal grid
-        int perfectW = s_Columns * s_CellWidth;
-        int perfectH = s_Rows * s_CellHeight;
+        int perfectW = m_Columns * m_CellWidth;
+        int perfectH = m_Rows * m_CellHeight;
         SetWindowSize(perfectW, perfectH);
-        s_WindowWidth = perfectW;
-        s_WindowHeight = perfectH;
+        m_WindowWidth = perfectW;
+        m_WindowHeight = perfectH;
 
-        s_Cells.assign(s_Columns * s_Rows, {' '});
+        m_Cells.assign(m_Columns * m_Rows, {' '});
     }
 
-    // Shutdown and cleanup
     void Terminal::Close()
     {
-        s_Cells.clear();
-        UnloadFont(s_Font);
-        CloseWindow();
+        m_Cells.clear();
+        UnloadFont(m_Font);
     }
 
-    // Print a string starting at (x, y)
     void Terminal::Print(int x, int y, const std::string& str)
     {
         int cx = x;
@@ -110,7 +69,6 @@ namespace Aethereal
             int bytesConsumed = 0;
             int codepoint = GetCodepoint(text + offset, &bytesConsumed);
 
-            // safety guard against malformed UTF-8
             if (bytesConsumed <= 0)
                 break;
 
@@ -119,84 +77,77 @@ namespace Aethereal
         }
     }
 
-    // Put a single character/codepoint at (x, y)
     void Terminal::Put(int x, int y, int code)
     {
-        if (x < 0 || y < 0 || x >= s_Columns || y >= s_Rows)
+        if (x < 0 || y < 0 || x >= m_Columns || y >= m_Rows)
             return;
 
-        if (s_GlyphCache.find(code) == s_GlyphCache.end() &&
-            std::find(s_NewCodepoints.begin(), s_NewCodepoints.end(), code) == s_NewCodepoints.end())
+        if (m_GlyphCache.find(code) == m_GlyphCache.end() &&
+            std::find(m_NewCodepoints.begin(), m_NewCodepoints.end(), code) == m_NewCodepoints.end())
         {
-            s_NewCodepoints.push_back(code);
+            m_NewCodepoints.push_back(code);
         }
 
-        s_Cells[GetIndex(x, y)] = {
-            .fg = s_ForegroundColor,
-            .bg = s_BackgroundColor,
+        m_Cells[GetIndex(x, y)] = {
+            .fg = m_ForegroundColor,
+            .bg = m_BackgroundColor,
             .codepoint = code,
         };
     }
 
-    // Clear all terminal cells
     void Terminal::Clear()
     {
-        s_BackgroundColor = BLACK;
-        s_ForegroundColor = WHITE;
-        for (auto& cell : s_Cells)
+        m_BackgroundColor = BLACK;
+        m_ForegroundColor = WHITE;
+
+        for (auto& cell : m_Cells)
         {
             cell = {' '};
         }
     }
 
-    // Set the default background color
     void Terminal::SetBackgroundColor(Color color)
     {
-        s_BackgroundColor = color;
+        m_BackgroundColor = color;
     }
 
-    // Set the default foreground (text) color
-    void Terminal::SetForegroundColor(Color col)
+    void Terminal::SetForegroundColor(Color color)
     {
-        s_ForegroundColor = col;
+        m_ForegroundColor = color;
     }
 
-    // Draw all terminal cells
     void Terminal::Refresh()
     {
         RebuildFont();
 
-        BeginDrawing();
-        ClearBackground(BLACK);
-
-        Vector2 dpi = s_UseDPIScaling ? GetWindowScaleDPI() : Vector2{1.0f, 1.0f};
+        Vector2 dpi = m_UseDPIScaling ? GetWindowScaleDPI() : Vector2{1.0f, 1.0f};
         float dpiscale = std::max(dpi.x, dpi.y);
         float invScale = 1.0f / dpiscale;
 
-        for (int y = 0; y < s_Rows; ++y)
+        for (int y = 0; y < m_Rows; ++y)
         {
-            for (int x = 0; x < s_Columns; ++x)
+            for (int x = 0; x < m_Columns; ++x)
             {
-                Cell cell = s_Cells[GetIndex(x, y)];
-                int cellX = x * s_CellWidth;
-                int cellY = y * s_CellHeight;
+                Cell cell = m_Cells[GetIndex(x, y)];
+                int cellX = x * m_CellWidth;
+                int cellY = y * m_CellHeight;
 
-                DrawRectangle(cellX, cellY, s_CellWidth, s_CellHeight, cell.bg);
+                DrawRectangle(cellX, cellY, m_CellWidth, m_CellHeight, cell.bg);
 
                 if (cell.codepoint == 0)
                     continue;
 
                 int cp = cell.codepoint;
-                auto it = s_GlyphCache.find(cp);
-                if (it == s_GlyphCache.end())
-                    it = s_GlyphCache.find('?');
-                if (it == s_GlyphCache.end())
+                auto it = m_GlyphCache.find(cp);
+                if (it == m_GlyphCache.end())
+                    it = m_GlyphCache.find('?');
+                if (it == m_GlyphCache.end())
                     continue;
 
                 const GlyphMetrics& m = it->second;
 
-                float penX = cellX + (s_CellWidth - m.advanceX * invScale) * 0.5f;
-                float penY = cellY + s_BaselineOffset;
+                float penX = cellX + (m_CellWidth - m.advanceX * invScale) * 0.5f;
+                float penY = cellY + m_BaselineOffset;
 
                 Rectangle dest = {
                     penX + m.offset.x * invScale,
@@ -204,115 +155,108 @@ namespace Aethereal
                     m.size.x * invScale,
                     m.size.y * invScale};
 
-                DrawTexturePro(s_Atlas, m.srcRect, dest, {0, 0}, 0.0f, cell.fg);
+                DrawTexturePro(m_Atlas, m.srcRect, dest, {0, 0}, 0.0f, cell.fg);
             }
         }
-
-        EndDrawing();
     }
 
-    // Terminal dimensions
-    int Terminal::Width()
+    int Terminal::Width() const
     {
-        return s_Columns - 1;
+        return m_Columns;
     }
-    int Terminal::Height()
+    int Terminal::Height() const
     {
-        return s_Rows - 1;
+        return m_Rows;
     }
 
-    // Load the font and cache glyph metrics
     void Terminal::LoadFont(const std::string& fontPath)
     {
-        for (int cp : s_NewCodepoints)
+        for (int cp : m_NewCodepoints)
         {
-            if (std::find(s_Codepoints.begin(), s_Codepoints.end(), cp) == s_Codepoints.end())
-            {
-                s_Codepoints.push_back(cp);
-            }
+            if (std::find(m_Codepoints.begin(), m_Codepoints.end(), cp) == m_Codepoints.end())
+                m_Codepoints.push_back(cp);
         }
 
-        Vector2 dpi = s_UseDPIScaling ? GetWindowScaleDPI() : Vector2{1.0f, 1.0f};
+        Vector2 dpi = m_UseDPIScaling ? GetWindowScaleDPI() : Vector2{1.0f, 1.0f};
         float dpiScale = std::max(dpi.x, dpi.y);
-        s_Font = LoadFontEx(fontPath.c_str(), std::ceil(s_FontSize * dpiScale), s_Codepoints.data(), s_Codepoints.size());
-        SetTextureFilter(s_Font.texture, TEXTURE_FILTER_POINT);
-        s_Atlas = s_Font.texture;
 
-        s_GlyphCache.clear();
+        m_Font = LoadFontEx(fontPath.c_str(), std::ceil(m_FontSize * dpiScale), m_Codepoints.data(), m_Codepoints.size());
+        SetTextureFilter(m_Font.texture, TEXTURE_FILTER_POINT);
+        m_Atlas = m_Font.texture;
+
+        m_GlyphCache.clear();
         float maxAdvance = 0.0f, maxAscent = 0.0f, maxDescent = 0.0f;
 
-        for (int i = 0; i < s_Codepoints.size(); ++i)
+        for (int i = 0; i < m_Codepoints.size(); ++i)
         {
-            GlyphInfo& g = s_Font.glyphs[i];
+            GlyphInfo& g = m_Font.glyphs[i];
             int cp = g.value;
 
             GlyphMetrics m;
-            m.srcRect = GetGlyphAtlasRec(s_Font, cp);
+            m.srcRect = GetGlyphAtlasRec(m_Font, cp);
             m.offset = {(float) g.offsetX, (float) g.offsetY};
             m.size = {m.srcRect.width, m.srcRect.height};
             m.advanceX = (float) g.advanceX;
 
-            s_GlyphCache[cp] = m;
-            s_CodepointToIndex[cp] = i;
+            m_GlyphCache[cp] = m;
+            m_CodepointToIndex[cp] = i;
 
             maxAdvance = std::max(maxAdvance, m.advanceX);
             maxAscent = std::max(maxAscent, -m.offset.y);
             maxDescent = std::max(maxDescent, m.srcRect.height + m.offset.y);
         }
 
-        if (s_NewCodepoints.empty() && !s_Built)
+        if (m_NewCodepoints.empty() && !m_Built)
         {
-            s_CellWidth = (int) std::ceil(maxAdvance / dpiScale);
-            s_CellHeight = (int) std::ceil((maxAscent + maxDescent) / dpiScale);
-            s_BaselineOffset = std::ceil(maxAscent / dpiScale);
-            s_Built = true;
+            m_CellWidth = (int) std::ceil(maxAdvance / dpiScale);
+            m_CellHeight = (int) std::ceil((maxAscent + maxDescent) / dpiScale);
+            m_BaselineOffset = std::ceil(maxAscent / dpiScale);
+            m_Built = true;
         }
-        s_NewCodepoints.clear();
+
+        m_NewCodepoints.clear();
     }
 
-    // Rebuild font if new glyphs were added
     void Terminal::RebuildFont()
     {
-        if (!s_NewCodepoints.empty())
+        if (!m_NewCodepoints.empty())
         {
-            UnloadFont(s_Font);
-            LoadFont(s_FontPath);
+            UnloadFont(m_Font);
+            LoadFont(m_FontPath);
         }
     }
 
     using namespace Enum::Unicode;
-    void Terminal::DrawBox(int x, int y, int width, int height, const BoxStyle& style)
+
+    void Terminal::DrawBox(int x, int y, int width, int height, BoxStyle style)
     {
-        // horizontal lines
-        auto codeHorizontal = style == BoxStyle::HEAVY ? (int) BoxHeavy::HORIZONTAL : (int) BoxLight::HORIZONTAL;
-        for (int bx = 0; bx < width; bx++)
+        int codeHorizontal = style == BoxStyle::HEAVY ? (int) BoxHeavy::HORIZONTAL : (int) BoxLight::HORIZONTAL;
+        int codeVertical = style == BoxStyle::HEAVY ? (int) BoxHeavy::VERTICAL : (int) BoxLight::VERTICAL;
+
+        for (int bx = 0; bx < width; ++bx)
         {
-            Terminal::Put(x + bx, y, (int) codeHorizontal);
-            Terminal::Put(x + bx, y + height, (int) codeHorizontal);
+            Put(x + bx, y, codeHorizontal);
+            Put(x + bx, y + height, codeHorizontal);
         }
 
-        // vertical lines
-        auto codeVertical = style == BoxStyle::HEAVY ? (int) BoxHeavy::VERTICAL : (int) BoxLight::VERTICAL;
-        for (int by = 0; by < height; by++)
+        for (int by = 0; by < height; ++by)
         {
-            Terminal::Put(x, y + by, (int) codeVertical);
-            Terminal::Put(x + width, y + by, (int) codeVertical);
+            Put(x, y + by, codeVertical);
+            Put(x + width, y + by, codeVertical);
         }
 
-        // Choose the correct corner characters for the current style.
         int topLeft = style == BoxStyle::HEAVY ? (int) BoxHeavy::TOP_LEFT : (int) BoxLight::TOP_LEFT;
         int topRight = style == BoxStyle::HEAVY ? (int) BoxHeavy::TOP_RIGHT : (int) BoxLight::TOP_RIGHT;
         int bottomLeft = style == BoxStyle::HEAVY ? (int) BoxHeavy::BOTTOM_LEFT : (int) BoxLight::BOTTOM_LEFT;
         int bottomRight = style == BoxStyle::HEAVY ? (int) BoxHeavy::BOTTOM_RIGHT : (int) BoxLight::BOTTOM_RIGHT;
 
-        // Draw corners using Terminal::Put.
-        Terminal::Put(x, y, topLeft);
-        Terminal::Put(x + width, y, topRight);
-        Terminal::Put(x, y + height, bottomLeft);
-        Terminal::Put(x + width, y + height, bottomRight);
+        Put(x, y, topLeft);
+        Put(x + width, y, topRight);
+        Put(x, y + height, bottomLeft);
+        Put(x + width, y + height, bottomRight);
     }
 
-    Terminal::TextWrap Terminal::WrapText(const std::string& s, int wrapSize)
+    Terminal::TextWrap Terminal::WrapText(const std::string& s, int wrapSize) const
     {
         std::istringstream iss(s);
         std::string word, line;
@@ -327,18 +271,20 @@ namespace Aethereal
             }
 
             if (!line.empty())
-            {
                 line += ' ';
-            }
             line += word;
         }
 
         if (!line.empty())
-        {
             wrap.lines.push_back(line);
-        }
-        wrap.num = wrap.lines.size();
 
+        wrap.num = (int) wrap.lines.size();
         return wrap;
     }
+
+    void Terminal::ToggleDPIScaling(bool active)
+    {
+        m_UseDPIScaling = active;
+    }
+
 } // namespace Aethereal
