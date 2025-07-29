@@ -1,7 +1,0 @@
-{
-    "id": "deepForest",
-    "description": "A shadowy part of the forest where the light barely touches the ground.",
-    "exits": {
-        "south": "clearing"
-    }
-}

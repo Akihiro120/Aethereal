@@ -1,12 +1,10 @@
 #include "terminal.h"
-#include "../utility/logging.h"
 #include "../data/enums/unicodes.h"
 #include "raylib.h"
 #include <algorithm>
 #include <sstream>
 #include <unordered_map>
 #include <vector>
-#include <iostream>
 
 namespace Aethereal
 {
@@ -19,7 +17,7 @@ namespace Aethereal
     static int s_CellWidth = 0;
     static int s_CellHeight = 0;
     static float s_FontSize = 0.0f;
-    static bool s_UseDPIScaling = false;
+    static bool s_UseDPIScaling = true;
 
     static Color s_BackgroundColor = BLACK;
     static Color s_ForegroundColor = WHITE;
@@ -231,7 +229,6 @@ namespace Aethereal
             if (std::find(s_Codepoints.begin(), s_Codepoints.end(), cp) == s_Codepoints.end())
             {
                 s_Codepoints.push_back(cp);
-                Utility::Logging::LOG("Added codepoint " + std::to_string(cp));
             }
         }
 
@@ -268,7 +265,6 @@ namespace Aethereal
             s_CellWidth = (int) std::ceil(maxAdvance / dpiScale);
             s_CellHeight = (int) std::ceil((maxAscent + maxDescent) / dpiScale);
             s_BaselineOffset = std::ceil(maxAscent / dpiScale);
-            Utility::Logging::LOG("Rebuilt Cell Dimensions");
             s_Built = true;
         }
         s_NewCodepoints.clear();

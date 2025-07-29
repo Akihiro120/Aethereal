@@ -1,23 +1,23 @@
 #pragma once
+#include "../system/systemManager.h"
 
 namespace Aethereal
 {
-    class Aethereal
+    class Game
     {
     public:
-        Aethereal();
-        ~Aethereal();
+        Game();
+        ~Game();
 
         void Run();
 
     private:
-        void RegisterServices();
-        void InitializeECS();
-        void LoadDatabase();
-        void InitialTerminal();
-        void SetInitialScreen();
-        void Update();
-        void Render();
-        void Clean();
+        void Step();
+        void Draw();
+        void Create();
+        void CleanUp();
+
+    private:
+        Core::SystemManager m_SystemManager = {};
     };
 }

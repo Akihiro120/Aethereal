@@ -177,10 +177,83 @@ namespace FECS
          * @return A View object for iterating over matching entities.
          */
         template <typename... C>
-        FECS::View<C...> View()
+        FECS::View<C...>& View()
         {
             // Create and return the view created
-            return FECS::View<C...>(&m_EntityManager);
+            static FECS::View<C...> v = FECS::View<C...>(&m_EntityManager);
+            return v;
+        }
+
+        /**
+         * @brief Retrieves the first instance of a specified component type from the registry.
+         *
+         * This template function searches the registry for any entity that contains
+         * the component of type C and returns a pointer to that component. Iteration
+         * stops as soon as the first match is found. If no entity with component C
+         * exists, nullptr is returned.
+         *
+         * @tparam C The component type to retrieve.
+         * @return Pointer to the component instance of type C, or nullptr if not found.
+         *
+         * @note
+         *    This performs at most one component lookup per call. For repeated access,
+         *    consider caching the returned pointer.
+         */
+        template <typename C>
+        C* Ctx()
+        {
+            C* result = nullptr;
+            View<C>().Each([&](Entity, C& c)
+            {
+                result = &c;
+                return false;
+            });
+            return result;
+        }
+
+        /**
+         * @brief Retrieves the first entity containing the specified component type.
+         *
+         * Iterates over all entities that have a component of type C and returns
+         * the ID of the first one found. If no such entity exists, returns
+         * INVALID_ENTITY.
+         *
+         * @tparam C
+         *    The component type to search for.
+         * @return
+         *    The first entity ID that has component C, or INVALID_ENTITY if none is found.
+         */
+        template <typename C>
+        FECS::Entity EntityCtx()
+        {
+            FECS::Entity result = INVALID_ENTITY;
+            View<C>().Each([&](FECS::Entity id, C&)
+            {
+                result = id;
+                return false;
+            });
+            return result;
+        }
+
+        /**
+         * @brief  Retrieve a component of type C for an entity, attaching it if not already present.
+         *
+         * This is a convenience wrapper around Has<T>, Attach<T> and Get<T>.
+         * If the entity does not yet have a T, a default-constructed T is attached;
+         * otherwise the existing component is returned.
+         *
+         * @tparam C            The component type to retrieve or attach.
+         * @param  id           The entity identifier.
+         * @return C&           Reference to the component instance on the entity.
+         */
+        template <typename C>
+        C& GetOrAttach(FECS::Entity id, const C& component)
+        {
+            if (!Has<C>(id))
+            {
+                Attach<C>(id, component);
+            }
+            return Get<C>(id);
         }
 
     private:

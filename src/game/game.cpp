@@ -1,104 +1,52 @@
 #include "game.h"
-
-// Aethereal
-#include "../services/service_locator/service_locator.h"
-#include "../screen/manager/screen_manager.h"
-#include "../screen/screens/main_menu/menu.h"
-#include "state/game_state.h"
-#include <fecs/fecs.h>
-#include "../components/tags/player_component.h"
-#include "../components/character/name_component.h"
-#include "../database/database.h"
-#include "../terminal/terminal.h"
+#include <raylib.h>
+#include "../ecs/system/core/engineSystem.h"
 
 namespace Aethereal
 {
-    using namespace Aethereal::Screen;
-    using namespace Aethereal::Service;
-    using namespace Aethereal::State;
-    using namespace Aethereal::Components;
-
-    Aethereal::Aethereal()
+    Game::Game()
     {
-        RegisterServices();
-        InitializeECS();
-        LoadDatabase();
-        InitialTerminal();
-        SetInitialScreen();
+        m_SystemManager
+            .AttachSystem<ECS::Systems::Core::EngineSystem>();
     }
 
-    Aethereal::~Aethereal()
+    Game::~Game()
     {
-        Clean();
     }
 
-    void Aethereal::RegisterServices()
+    void Game::Run()
     {
-        ServiceLocator::RegisterService(std::make_shared<GameState>());
-        ServiceLocator::RegisterService(std::make_shared<ScreenManager>());
-        ServiceLocator::RegisterService(std::make_shared<FECS::Registry>());
-        ServiceLocator::RegisterService(std::make_shared<Database>());
-    }
-
-    void Aethereal::InitializeECS()
-    {
-        auto ecs = ServiceLocator::Get<FECS::Registry>();
-        ecs->RegisterComponent<Tags::PlayerComponent>();
-        ecs->RegisterComponent<Character::NameComponent>();
-    }
-
-    void Aethereal::LoadDatabase()
-    {
-        auto db = ServiceLocator::Get<Database>();
-        db->LoadFromDirectory("json/");
-    }
-
-    void Aethereal::InitialTerminal()
-    {
-        Terminal::Open(Terminal::TerminalConfig{
-            .windowWidth = 1280,
-            .windowHeight = 720,
-            .columns = 160,
-            .rows = 50,
-            .fontPath = "../resources/font/CascadiaCove.ttf",
-        });
-    }
-
-    void Aethereal::SetInitialScreen()
-    {
-        auto sm = ServiceLocator::Get<ScreenManager>();
-        sm->Replace(std::make_shared<MainMenu::Menu>());
-    }
-
-    void Aethereal::Run()
-    {
-        // Render loop.
-        while (ServiceLocator::Get<GameState>()->IsGameRunning() && !WindowShouldClose())
+        Create();
+        while (!WindowShouldClose())
         {
-            Update();
-            Render();
+            Step();
+            Draw();
         }
+        CleanUp();
     }
 
-    void Aethereal::Render()
+    void Game::Create()
     {
-        auto sm = ServiceLocator::Get<ScreenManager>();
-
-        Terminal::Clear();
-        sm->Render();
-        Terminal::Refresh();
+        m_SystemManager.Create();
     }
 
-    void Aethereal::Update()
+    void Game::Step()
     {
-        auto sm = ServiceLocator::Get<ScreenManager>();
-        sm->Update();
+        m_SystemManager.Step();
     }
 
-    void Aethereal::Clean()
+    void Game::Draw()
     {
-        ServiceLocator::Get<ScreenManager>()->Clean();
-        ServiceLocator::Clean();
-        Terminal::Close();
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        m_SystemManager.Draw();
+
+        EndDrawing();
+    }
+
+    void Game::CleanUp()
+    {
+        m_SystemManager.CleanUp();
     }
 }

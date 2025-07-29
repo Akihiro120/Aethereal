@@ -1,7 +1,0 @@
-{
-    "id": "inn",
-    "description": "The local inn, warm and cozy with the smell of roasted meat in the air.",
-    "exits": {
-        "south": "square"
-    }
-}

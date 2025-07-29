@@ -1,0 +1,49 @@
+{
+    "version": "1.0.0",
+    "tasks": [
+        {
+            "label": "CMake Generate",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                "${workspaceFolder}",
+                "-B",
+                "${workspaceFolder}/build",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-G",
+                "Ninja"
+            ],
+            "problemMatcher": ["$gcc"],
+            "detail": "Generate CMake Project with Ninja"
+        },
+        {
+            "label": "CMake Build",
+            "type": "shell",
+            "command": "ninja",
+            "args": ["-C", "${workspaceFolder}/build"],
+            "problemMatcher": ["$gcc"],
+            "detail": "Build CMake Project with Ninja"
+        },
+        {
+            "label": "Run Executable",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/${input:exeName}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": "false",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "exeName",
+            "type": "promptString",
+            "description": "Name of the executable to run (No Path)",
+            "default": ""
+        }
+    ]
+}
