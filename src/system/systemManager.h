@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include <unordered_map>
+#include <vector>
 #include <typeindex>
 #include "system.h"
 
@@ -21,19 +21,12 @@ namespace Aethereal::Core
         template <typename T>
         SystemManager& AttachSystem()
         {
-            std::type_index type(typeid(T));
-
-            if (m_Systems.contains(type))
-            {
-                return *this;
-            }
-
-            m_Systems[type] = std::make_unique<T>();
+            m_Systems.push_back(std::make_unique<T>());
 
             return *this;
         }
 
     private:
-        std::unordered_map<std::type_index, std::unique_ptr<ISystem>> m_Systems;
+        std::vector<std::unique_ptr<ISystem>> m_Systems;
     };
 }

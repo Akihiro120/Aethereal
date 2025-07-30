@@ -4,7 +4,7 @@ namespace Aethereal::Core
 {
     void SystemManager::Create()
     {
-        for (auto& [type, system] : m_Systems)
+        for (auto& system : m_Systems)
         {
             system->Create();
         }
@@ -12,7 +12,7 @@ namespace Aethereal::Core
 
     void SystemManager::Step()
     {
-        for (auto& [type, system] : m_Systems)
+        for (auto& system : m_Systems)
         {
             system->Step();
         }
@@ -20,7 +20,7 @@ namespace Aethereal::Core
 
     void SystemManager::Draw()
     {
-        for (auto& [type, system] : m_Systems)
+        for (auto& system : m_Systems)
         {
             system->Draw();
         }
@@ -28,7 +28,7 @@ namespace Aethereal::Core
 
     void SystemManager::CleanUp()
     {
-        for (auto& [type, system] : m_Systems)
+        for (auto& system : m_Systems)
         {
             system->CleanUp();
         }
