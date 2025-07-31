@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../system/system.h"
+#include "../core/system.h"
 
 namespace Aethereal::ECS::Systems::Render
 {
