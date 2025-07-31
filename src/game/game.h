@@ -1,5 +1,5 @@
 #pragma once
-#include "../system/systemManager.h"
+#include "../ecs/system/core/systemManager.h"
 
 namespace Aethereal
 {

@@ -1,6 +1,6 @@
 #include "game.h"
 #include <raylib.h>
-#include "../ecs/system/core/engineSystem.h"
+#include "../ecs/system/engine/engineSystem.h"
 #include "../ecs/system/rendering/renderSystem.h"
 
 namespace Aethereal
