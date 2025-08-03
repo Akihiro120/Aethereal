@@ -10,6 +10,10 @@ namespace Aethereal::ECS::Systems::Render
         Terminal& t = ECS::Registry.GetOrAttach<Terminal>(terminal, {});
 
         Terminal::Config config;
+        config.columns = 160;
+        config.rows = 50;
+        config.windowWidth = GetScreenWidth();
+        config.windowHeight = GetScreenHeight();
         config.fontPath = "resources/font/CascadiaCove.ttf";
 
         t.ToggleDPIScaling(false);
