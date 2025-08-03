@@ -1,9 +1,9 @@
 #pragma once
-#include "../../../system/system.h"
+#include "../core/system.h"
 
 namespace Aethereal
 {
-    namespace ECS::Systems::Core
+    namespace ECS::Systems::Engine
     {
         class EngineSystem : public Aethereal::Core::ISystem
         {
