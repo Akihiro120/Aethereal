@@ -1,13 +1,13 @@
 #include "engineSystem.h"
 #include <raylib.h>
-#include "../../../terminal/terminal.h"
 
 namespace Aethereal::ECS::Systems::Engine
 {
     void EngineSystem::Create()
     {
         SetTraceLogLevel(TraceLogLevel::LOG_NONE);
-        InitWindow(1920, 1080, "Aethereal");
+        SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+        InitWindow(1280, 720, "Aethereal");
         SetTargetFPS(60);
     }
 

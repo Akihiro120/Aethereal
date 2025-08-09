@@ -16,7 +16,7 @@ namespace Aethereal::ECS::Systems::Render
         config.windowHeight = GetScreenHeight();
         config.fontPath = "resources/font/CascadiaCove.ttf";
 
-        t.ToggleDPIScaling(false);
+        t.ToggleDPIScaling(true);
         t.Open(config);
     }
 

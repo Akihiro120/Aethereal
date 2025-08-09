@@ -2,6 +2,11 @@
 #include <memory>
 #include <string>
 #include <sol/sol.hpp>
+#include "../../../data/structures/scripts/talentScript.h"
+#include "../../../data/structures/scripts/speciesScript.h"
+#include "../../../data/structures/scripts/weaponScript.h"
+
+using namespace Aethereal::Data::Structures::Scripts;
 
 namespace Aethereal::ECS::Resource::Scripting
 {
@@ -14,19 +19,6 @@ namespace Aethereal::ECS::Resource::Scripting
     };
 
     // SCRIPTING SYSTEM //////////////////////////////////////////////////////////////////////////////
-
-    struct WeaponScript
-    {
-        sol::table information;
-        sol::table stats;
-        sol::table scalings;
-        sol::function passive;
-        sol::function inspect;
-        sol::function onHit;
-        sol::function onUse;
-        sol::function onEquip;
-        sol::function onDrop;
-    };
 
     class ScriptingResource
     {

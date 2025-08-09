@@ -55,16 +55,10 @@ namespace Aethereal::ECS::Resource::Scripting
             }
 
             WeaponScript script;
-            script.information = tbl;
-            script.scalings = tbl["scalings"];
-            script.stats = tbl["stats"];
-            script.passive = tbl["passive"];
-            script.inspect = tbl["inspect"];
-            script.onDrop = tbl["onDrop"];
-            script.onEquip = tbl["onEquip"];
-            script.onHit = tbl["onHit"];
-            script.onUse = tbl["onUse"];
-
+            script.id = tbl["id"];
+            script.name = tbl["name"];
+            script.description = tbl["description"];
+            script.rarity = tbl["rarity"];
             m_WeaponScripts[id] = script;
         }
     }
